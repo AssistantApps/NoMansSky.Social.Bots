@@ -13,6 +13,7 @@ const mastoClients: Array<MastodonClientMeta> = [];
 for (const cred of credentialsJson.accounts) {
     mastoClients.push({
         name: cred.name,
+        dialogFile: cred.dialogFile,
         client: new Mastodon({
             client_key: cred.clientKey,
             client_secret: cred.clientSecret,

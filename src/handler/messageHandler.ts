@@ -5,8 +5,7 @@ import { onDirectMessageHandler } from "./message/directMessageHandler";
 
 export const onMessageHandler = (clientMeta: MastodonClientMeta) => (payload: MastodonMessageEvent<MastodonMessageEventData>) => {
     if (payload.data?.account?.bot == true) {
-        console.warn(`Bot account: ${payload.event}`);
-        console.warn(payload.data);
+        console.warn(clientMeta.name, `Bot account event: '${payload.event}'`);
         return;
     }
 
@@ -17,5 +16,5 @@ export const onMessageHandler = (clientMeta: MastodonClientMeta) => (payload: Ma
         }
     }
 
-    console.info('unhandled payload event: ', payload.event);
+    console.info(clientMeta.name, 'unhandled payload event: ', payload.event);
 }
