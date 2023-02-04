@@ -6,6 +6,8 @@
   "homepage": "https://github.com/AssistantApps/NoMansSky.Social.Bots#readme",
   "scripts": {
     "build": "rimraf ./build && tsc",
+    "copy-assets": "copyfiles -u 2 ./src/assets/**/* ./build/assets",
+    "copy-env": "copyfiles ./.env ./build/",
     "start": "npm run build && node build/index.js",
     "start:dev": "npx nodemon"
   },
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
+    "copyfiles": "^2.4.1",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
