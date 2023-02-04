@@ -1,6 +1,6 @@
 export interface MastodonClientMeta {
     name: string;
-    dialogFile: string;
+    dialog: string;
     client: any;
     listener: any;
 }

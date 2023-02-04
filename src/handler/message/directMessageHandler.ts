@@ -1,3 +1,4 @@
+import { npcDialogs } from "../../constants/npcDialog";
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
@@ -10,16 +11,13 @@ export const onDirectMessageHandler = async (clientMeta: MastodonClientMeta, pay
 
     let dialogOptions = ['Hello Traveller!'];
     if (clientMeta.name != null) {
-        try {
-            const json = await import(`../../assets/npcDialog/${clientMeta.name}`);
-            dialogOptions = json.default;
-        }
-        catch (_) {
-            //
+        const dialogs: Array<string> | null | undefined = npcDialogs[clientMeta.dialog];
+        if (dialogs != null && dialogs.length > 0) {
+            dialogOptions = dialogs;
         }
     }
 
-    const dialogOptionIndex = randomIntFromRange(0, 1);
+    const dialogOptionIndex = randomIntFromRange(0, dialogOptions.length);
     const params: MastodonMakeToot = {
         status: `@${payload.account.username} ` + dialogOptions[dialogOptionIndex],
         in_reply_to_id: payload.status.id,

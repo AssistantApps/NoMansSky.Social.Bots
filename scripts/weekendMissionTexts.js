@@ -35,12 +35,18 @@ for (const season of allSeasons) {
     }
 }
 
+let fileOutput = 'export const npcDialogs: any = {\n';
 for (const outputProp in outputs) {
     if (Object.hasOwnProperty.call(outputs, outputProp)) {
-        const output = outputs[outputProp].map(outStr => `\t\"${outStr}\"`);
-        fs.writeFileSync(
-            `./scripts/output/${outputProp.toLocaleLowerCase()}.json`,
-            '[\n' + output.join(',\n') + '\n]'
-        );
+        const output = outputs[outputProp].map(outStr => `\t\t\"${outStr}\"`);
+        const propOutput = '[\n' + output.join(',\n') + '\n\t],\n';
+
+        fileOutput += `\t${outputProp.toLocaleLowerCase()}: ${propOutput}`;
     }
 }
+fileOutput += '}\n'
+
+fs.writeFileSync(
+    `./src/constants/npcDialog.ts`,
+    fileOutput,
+);
