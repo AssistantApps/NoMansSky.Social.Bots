@@ -12,7 +12,7 @@ console.log("Starting up bot accounts");
 const mastoClients: Array<MastodonClientMeta> = [];
 for (const cred of credentialsJson.accounts) {
     mastoClients.push({
-        ...cred,
+        ...(cred as any),
         client: new Mastodon({
             client_key: cred.clientKey,
             client_secret: cred.clientSecret,
