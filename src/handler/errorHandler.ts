@@ -1,5 +1,6 @@
 import { MastodonClientMeta } from "../contracts/mastoClientMeta";
+import { getLog } from "../services/internal/logService";
 
 export const onErrorHandler = (clientMeta: MastodonClientMeta) => (err: any) => {
-    console.error(clientMeta.name, err);
+    getLog().e(clientMeta.name, err);
 }
