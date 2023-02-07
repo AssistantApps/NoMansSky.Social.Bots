@@ -14,6 +14,13 @@ export class MastodonService {
     config: ConfigService;
 
     createClient(cred: ICredential): any {
+        console.log({
+            client_key: cred.clientKey,
+            client_secret: cred.clientSecret,
+            access_token: cred.accessToken,
+            timeout_ms: this.config.getMastodonTimeout(),
+            api_url: this.config.getMastodonUrl(),
+        });
         return new Mastodon({
             client_key: cred.clientKey,
             client_secret: cred.clientSecret,

@@ -5,7 +5,7 @@
   "author": "Kurt Lourens",
   "homepage": "https://github.com/AssistantApps/NoMansSky.Social.Bots#readme",
   "scripts": {
-    "build": "NODE_ENV=production && rimraf ./build && tsc",
+    "build": "rimraf ./build && tsc",
     "copy-assets": "copyfiles -u 2 ./src/assets/**/* ./build/assets",
     "copy-env": "copyfiles ./.env ./build/",
     "start": "npm run build && node build/index.js",
