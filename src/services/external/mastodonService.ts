@@ -51,7 +51,6 @@ export const sendToot = (mastoClient: MastodonClientMeta, params: MastodonMakeTo
 export const sendTootWithMedia = (mastoClient: MastodonClientMeta, file: fs.ReadStream, params: MastodonMakeToot): Promise<any> => {
     return mastoClient.client.post('media', { file }).then((resp: any) => {
         const id = resp.data.id;
-        getLog().i({ id })
         mastoClient.client.post('statuses', { ...params, media_ids: [id] })
     });
 }

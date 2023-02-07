@@ -1,12 +1,17 @@
 import "reflect-metadata";
+import { Container } from "typedi";
+
 import { accounts } from './assets/data/credentials.json';
 import { MastodonClientMeta } from './contracts/mastoClientMeta';
 import { onErrorHandler } from './handler/errorHandler';
 import { onMessageHandler } from './handler/messageHandler';
 import { getMastodonService } from "./services/external/mastodonService";
 import { getLog } from "./services/internal/logService";
+import { BOT_PATH } from "./services/internal/configService";
 
 require('dotenv').config();
+
+Container.set(BOT_PATH, __dirname);
 
 getLog().i("Starting up bot accounts");
 

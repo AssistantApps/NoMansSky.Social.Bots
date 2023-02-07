@@ -1,17 +1,16 @@
-import { Readable } from 'stream';
-import { DataService, GameItemModel, GameItemService, QuicksilverStore } from 'assistantapps-nomanssky-info';
+import { DataService, GameItemService, QuicksilverStore } from 'assistantapps-nomanssky-info';
+import { createReadStream, existsSync, writeFileSync } from 'fs';
+import { join } from 'path';
 
-import { GithubDialogLines, GithubDialogType } from "../../contracts/github/githubDialog";
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
-import { randomIntFromRange } from "../../helper/randomHelper";
+import { getStreamFromSvg } from '../../helper/fileHelper';
 import { getAssistantNmsApi } from "../../services/api/assistantNmsApiService";
-import { getGithubFileService } from "../../services/api/githubFileService";
-import { sendToot, sendTootWithMedia } from "../../services/external/mastodonService";
+import { sendTootWithMedia } from "../../services/external/mastodonService";
+import { getBotPath } from '../../services/internal/configService';
 import { getLog } from "../../services/internal/logService";
-import { getCommunityMissionSvgFromTemplate } from './svgTemplate';
-import { anyObject } from '../../helper/typescriptHacks';
+import { communityMissionSvgTemplate } from './communityMission.svg.template';
 
 export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta, payload: MastodonMessageEventData) => {
     const scheduledDate = new Date();
@@ -27,6 +26,7 @@ export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta
     const dataService = new DataService();
     const qsStoreItems = await dataService.getQuicksilverStore();
 
+    let compiledTemplate: string | null = null;
     let messageToSend = `@${payload.account.username} Greetings Traveller. \nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
     try {
         const current = qsStoreItems.find((qs: QuicksilverStore) => qs.MissionId == cmResult.value.missionId);
@@ -39,9 +39,21 @@ export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta
 
         const shareLink = `https://app.nmsassistant.com/link/en/${itemData.Id}.html`;
         messageToSend = messageToSend + `\n\nCurrent item being researched: "${itemData.Name}".\n${shareLink}`;
+
+        compiledTemplate = communityMissionSvgTemplate({
+            ...cmResult.value,
+            itemName: itemData.Name,
+            qsCost: itemData.BaseValueUnits,
+            imageUrl: `https://app.nmsassistant.com/assets/images/${itemData.Icon}`,
+        });
     }
     catch (ex) {
         getLog().e(clientMeta.name, 'error getting community mission details', ex);
+    }
+
+    if (compiledTemplate == null) {
+        getLog().e(clientMeta.name, 'error getting community mission details', 'compiledTemplate == null');
+        return;
     }
 
 
@@ -51,9 +63,13 @@ export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta
         visibility: payload.status.visibility,
         scheduled_at: scheduledDate.toISOString(),
     }
-    const compiledTemplate = getCommunityMissionSvgFromTemplate(cmResult.value);
-    const stream: any = Readable.from([compiledTemplate]);
-    await sendTootWithMedia(clientMeta, stream, params);
+    try {
+        const fileStream = await getStreamFromSvg('qsCompanion-', compiledTemplate);
+        await sendTootWithMedia(clientMeta, fileStream, params);
+    }
+    catch (ex) {
+        getLog().e(clientMeta.name, 'error generating community mission image', ex);
+    }
 
     getLog().i(clientMeta.name, 'quicksilver companion response', params);
 }

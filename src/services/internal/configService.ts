@@ -1,4 +1,4 @@
-import { Container, Service } from "typedi";
+import { Container, Service, Token } from "typedi";
 
 @Service()
 export class ConfigService {
@@ -11,5 +11,8 @@ export class ConfigService {
         return (process.env?.[property] ?? '') as T;
     };
 }
+
+export const BOT_PATH = new Token<string>('BOT_PATH');
+export const getBotPath = () => Container.get(BOT_PATH);
 
 export const getConfig = () => Container.get(ConfigService);

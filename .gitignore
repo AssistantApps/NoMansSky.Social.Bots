@@ -4,3 +4,4 @@ node_modules
 /scripts/output/*.json
 /build
 **/.ignoreme
+/src/temp

@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { createWriteStream, existsSync, writeFileSync } from 'fs';
+
 import { ResultWithValue } from '../../contracts/resultWithValue';
 import { anyObject } from '../../helper/typescriptHacks';
 
@@ -39,6 +41,16 @@ export class BaseApiService {
         value: anyObject,
         errorMessage: (ex as any).message
       }
-      }
     }
+  }
+
+  async downloadFile(url: string, dest: string): Promise<void> {
+    return axios({
+      method: 'get',
+      url,
+      responseType: 'stream'
+    }).then(function (response) {
+      response.data.pipe(createWriteStream(dest));
+    });
+  }
 }
