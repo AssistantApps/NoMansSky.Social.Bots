@@ -9,10 +9,10 @@ docker build -t nms-social-npc-bots -f Dockerfile .
 
 
 # ------------------------- Tags -------------------------
-# docker tag nms-social-npc-bots registry.local.khaoznet.xyz/nms-social-npc-bots:$version
+docker tag nms-social-npc-bots registry.local.khaoznet.xyz/nms-social-npc-bots:$version
 
 # ------------------------- Push -------------------------
-# docker push registry.local.khaoznet.xyz/nms-social-npc-bots:$version
+docker push registry.local.khaoznet.xyz/nms-social-npc-bots:$version
 
 
 PAUSE
