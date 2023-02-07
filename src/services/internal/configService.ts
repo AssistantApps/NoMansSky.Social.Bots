@@ -10,6 +10,8 @@ export class ConfigService {
     get<T>(property: string): T {
         return (process.env?.[property] ?? '') as T;
     };
+
+    isProd = () => (process.env.NODE_ENV === 'production');
 }
 
 export const BOT_PATH = new Token<string>('BOT_PATH');
