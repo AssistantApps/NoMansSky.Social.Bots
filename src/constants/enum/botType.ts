@@ -1,5 +1,5 @@
 export enum BotType {
-    ariadne,
-    ariadne1,
-    qsCompanion,
+    ariadne = 'ariadne',
+    ariadne1 = 'ariadne1',
+    qsCompanion = 'qsCompanion',
 }

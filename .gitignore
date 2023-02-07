@@ -3,3 +3,5 @@ node_modules
 /.env
 /scripts/output/*.json
 /build
+**/.ignoreme
+/src/temp

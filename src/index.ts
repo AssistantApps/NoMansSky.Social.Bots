@@ -1,28 +1,30 @@
-import credentialsJson from './assets/data/credentials.json';
+import "reflect-metadata";
+import { Container } from "typedi";
+
+import { accounts } from './assets/data/credentials.json';
 import { MastodonClientMeta } from './contracts/mastoClientMeta';
 import { onErrorHandler } from './handler/errorHandler';
 import { onMessageHandler } from './handler/messageHandler';
+import { getMastodonService } from "./services/external/mastodonService";
+import { getLog } from "./services/internal/logService";
+import { BOT_PATH } from "./services/internal/configService";
 
 require('dotenv').config();
-const Mastodon = require('mastodon-api');
-const fs = require('fs');
 
-console.log("Starting up bot accounts");
+Container.set(BOT_PATH, __dirname);
 
+getLog().i("Starting up bot accounts");
+
+const mastoService = getMastodonService();
 const mastoClients: Array<MastodonClientMeta> = [];
-for (const cred of credentialsJson.accounts) {
+for (const cred of accounts) {
+    const credAsAny: any = (cred as any);
     mastoClients.push({
-        ...(cred as any),
-        client: new Mastodon({
-            client_key: cred.clientKey,
-            client_secret: cred.clientSecret,
-            access_token: cred.accessToken,
-            timeout_ms: 60 * 1000, // optional HTTP request timeout to apply to all requests.
-            api_url: process.env.API_URL,
-        }),
+        ...credAsAny,
+        client: mastoService.createClient(credAsAny),
         listener: null,
     });
-    console.log(`\t${cred.name} client ✔`);
+    getLog().i(`\t${cred.name} client ✔`);
 }
 
 for (const mastoClient of mastoClients) {
@@ -33,4 +35,4 @@ for (const mastoClient of mastoClients) {
 }
 
 
-console.log("Setup complete...");
+getLog().i("Setup complete...");

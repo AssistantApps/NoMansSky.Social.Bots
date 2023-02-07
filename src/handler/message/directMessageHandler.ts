@@ -1,29 +1,16 @@
-import { npcDialogs } from "../../constants/npcDialog";
+import { BotType } from "../../constants/enum/botType";
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
-import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
-import { randomIntFromRange } from "../../helper/randomHelper";
-import { sendToot } from "../../helper/sendToot";
+import { quickSilverCompanionHandler } from "../../features/quickSilverCompanion/quickSilverCompanion";
+import { randomDialogHandler } from "../../features/randomDialog/randomDialog";
 
 export const onDirectMessageHandler = async (clientMeta: MastodonClientMeta, payload: MastodonMessageEventData) => {
-    const scheduledDate = new Date();
-    scheduledDate.setMinutes(scheduledDate.getMinutes() + 2);
+    const botType = clientMeta.type;
 
-    let dialogOptions = ['Hello Traveller!'];
-    if (clientMeta.name != null) {
-        const dialogs: Array<string> | null | undefined = npcDialogs[clientMeta.dialog];
-        if (dialogs != null && dialogs.length > 0) {
-            dialogOptions = dialogs;
-        }
+    if (botType == BotType.ariadne || botType == BotType.ariadne1) {
+        await randomDialogHandler(clientMeta, payload)
     }
-
-    const dialogOptionIndex = randomIntFromRange(0, dialogOptions.length);
-    const params: MastodonMakeToot = {
-        status: `@${payload.account.username} ` + dialogOptions[dialogOptionIndex],
-        in_reply_to_id: payload.status.id,
-        visibility: payload.status.visibility,
-        scheduled_at: scheduledDate.toISOString(),
+    if (botType == BotType.qsCompanion) {
+        await quickSilverCompanionHandler(clientMeta, payload)
     }
-    console.info(clientMeta.name, 'direct message', params);
-    sendToot(clientMeta, params);
 }
