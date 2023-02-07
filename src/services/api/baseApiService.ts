@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createWriteStream, existsSync, writeFileSync } from 'fs';
+import { createWriteStream } from 'fs';
 
 import { ResultWithValue } from '../../contracts/resultWithValue';
 import { anyObject } from '../../helper/typescriptHacks';
