@@ -44,13 +44,12 @@ export class BaseApiService {
     }
   }
 
-  async downloadFile(url: string, dest: string): Promise<void> {
-    return axios({
-      method: 'get',
-      url,
-      responseType: 'stream'
-    }).then(function (response) {
-      response.data.pipe(createWriteStream(dest));
+  async getRemoteImageAsBase64(url: string): Promise<string> {
+    const arrayBuffer = await axios.get(url, {
+      responseType: 'arraybuffer'
     });
+    let buffer = Buffer.from(arrayBuffer.data, 'binary').toString("base64");
+    let image = `data:${arrayBuffer.headers["content-type"]};base64,${buffer}`;
+    return image;
   }
 }

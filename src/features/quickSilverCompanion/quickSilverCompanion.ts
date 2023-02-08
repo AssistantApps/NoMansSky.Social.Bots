@@ -1,16 +1,18 @@
 import { DataService, GameItemService, QuicksilverStore } from 'assistantapps-nomanssky-info';
-import { createReadStream, existsSync, writeFileSync } from 'fs';
+import { createReadStream, existsSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
-import { getStreamFromSvg } from '../../helper/fileHelper';
+import { getBufferFromSvg, getBase64FromAssistantNmsImage, getTempFile } from '../../helper/fileHelper';
 import { getAssistantNmsApi } from "../../services/api/assistantNmsApiService";
-import { sendTootWithMedia } from "../../services/external/mastodonService";
+import { sendToot, sendTootWithMedia, uploadTootMedia } from "../../services/external/mastodonService";
 import { getBotPath } from '../../services/internal/configService';
 import { getLog } from "../../services/internal/logService";
 import { communityMissionSvgTemplate } from './communityMission.svg.template';
+
+const { Readable } = require('stream');
 
 export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta, payload: MastodonMessageEventData) => {
     const scheduledDate = new Date();
@@ -40,11 +42,13 @@ export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta
         const shareLink = `https://app.nmsassistant.com/link/en/${itemData.Id}.html`;
         messageToSend = messageToSend + `\n\nCurrent item being researched: "${itemData.Name}".\n${shareLink}`;
 
+        const imgDestData = await getBase64FromAssistantNmsImage(itemData.Icon);
+
         compiledTemplate = communityMissionSvgTemplate({
             ...cmResult.value,
             itemName: itemData.Name,
             qsCost: itemData.BaseValueUnits,
-            imageUrl: `https://app.nmsassistant.com/assets/images/${itemData.Icon}`,
+            itemImgData: imgDestData,
         });
     }
     catch (ex) {
@@ -56,20 +60,47 @@ export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta
         return;
     }
 
-
     const params: MastodonMakeToot = {
         status: messageToSend,
         in_reply_to_id: payload.status.id,
         visibility: payload.status.visibility,
         scheduled_at: scheduledDate.toISOString(),
     }
+    // const mediaIdCache = getTempFile('qsCompanion-', 'json');
+    // try {
+    //     const mediaIdCacheContent: any = readFileSync(mediaIdCache);
+    //     const mediaIdCacheArr = JSON.parse(mediaIdCacheContent);
+    //     if (Array.isArray(mediaIdCacheArr)) {
+    //         sendToot(clientMeta, {
+    //             ...params,
+    //             media_ids: mediaIdCacheArr,
+    //         });
+    //         return;
+    //     }
+    // }
+    // catch (_) {
+    // }
+
     try {
-        const fileStream = await getStreamFromSvg('qsCompanion-', compiledTemplate);
-        await sendTootWithMedia(clientMeta, fileStream, params);
+        getBufferFromSvg(
+            'qsCompanion-',
+            compiledTemplate,
+            (outputFilePath: string) => {
+                const fileStream = createReadStream(outputFilePath);
+                uploadTootMedia(clientMeta, fileStream).then((mediaId) => {
+                    // const mediaIdCacheContent = JSON.stringify([mediaId]);
+                    // writeFileSync(mediaIdCache, mediaIdCacheContent);
+
+                    sendToot(clientMeta, {
+                        ...params,
+                        media_ids: [mediaId],
+                    });
+                    getLog().i(clientMeta.name, 'quicksilver companion response', params);
+                });
+            }
+        );
     }
     catch (ex) {
         getLog().e(clientMeta.name, 'error generating community mission image', ex);
     }
-
-    getLog().i(clientMeta.name, 'quicksilver companion response', params);
 }

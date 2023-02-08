@@ -48,6 +48,12 @@ export const sendToot = (mastoClient: MastodonClientMeta, params: MastodonMakeTo
 }
 
 
+export const uploadTootMedia = async (mastoClient: MastodonClientMeta, file: fs.ReadStream): Promise<string> => {
+    const resp = await mastoClient.client.post('media', { file });
+    return resp.data.id;
+}
+
+
 export const sendTootWithMedia = (mastoClient: MastodonClientMeta, file: fs.ReadStream, params: MastodonMakeToot): Promise<any> => {
     return mastoClient.client.post('media', { file }).then((resp: any) => {
         const id = resp.data.id;
