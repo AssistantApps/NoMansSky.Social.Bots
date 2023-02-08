@@ -41,6 +41,8 @@ export const getTempFile = (filenamePrefix: string, extension: string): string =
 
 export const getBufferFromSvg = async (filenamePrefix: string, compiledTemplate: string, callback: (outputFilePath: string) => void) => {
     const outputFilePath = getTempFile(filenamePrefix, 'png');
+    // const outputFilePathsvg = getTempFile(filenamePrefix, 'svg');
+    // writeFileSync(outputFilePathsvg, compiledTemplate);
 
     svg2img(compiledTemplate, (error: any, buffer: any) => {
         writeFileSync(outputFilePath, buffer);

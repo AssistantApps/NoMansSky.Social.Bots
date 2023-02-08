@@ -1,14 +1,12 @@
 import { DataService, GameItemService, QuicksilverStore } from 'assistantapps-nomanssky-info';
-import { createReadStream, existsSync, readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { createReadStream } from 'fs';
 
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
-import { getBufferFromSvg, getBase64FromAssistantNmsImage, getTempFile } from '../../helper/fileHelper';
+import { getBase64FromAssistantNmsImage, getBufferFromSvg } from '../../helper/fileHelper';
 import { getAssistantNmsApi } from "../../services/api/assistantNmsApiService";
-import { sendToot, sendTootWithMedia, uploadTootMedia } from "../../services/external/mastodonService";
-import { getBotPath } from '../../services/internal/configService';
+import { sendToot, uploadTootMedia } from "../../services/external/mastodonService";
 import { getLog } from "../../services/internal/logService";
 import { communityMissionSvgTemplate } from './communityMission.svg.template';
 
@@ -40,7 +38,7 @@ export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta
         if (itemData == null) throw 'Item not found by id';
 
         const shareLink = `https://app.nmsassistant.com/link/en/${itemData.Id}.html`;
-        messageToSend = messageToSend + `\n\nCurrent item being researched: "${itemData.Name}".\n${shareLink}`;
+        messageToSend = messageToSend + `\n\nCurrent item being researched: ${itemData.Name}.\n${shareLink}`;
 
         const imgDestData = await getBase64FromAssistantNmsImage(itemData.Icon);
 
