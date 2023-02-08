@@ -12,5 +12,5 @@ export interface GithubDialogLines {
 }
 
 export enum GithubDialogType {
-    message,
+    message = 'message',
 }

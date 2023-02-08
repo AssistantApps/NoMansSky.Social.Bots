@@ -7,21 +7,22 @@ import { BaseApiService } from './baseApiService';
 
 @Service()
 export class GithubFileService extends BaseApiService {
+    constructor() {
+        super('https://raw.githubusercontent.com');
+    }
 
     getDialogFile = (): Promise<ResultWithValue<GithubDialog>> =>
-        this._getFile<GithubDialog>('https://raw.githubusercontent.com/AssistantApps/NoMansSky.Social.Bots/main/src/assets/data/dialogs.json');
+        this._getFile<GithubDialog>('/AssistantApps/NoMansSky.Social.Bots/main/src/assets/data/dialogs.json');
 
     async _getFile<T>(fullUrl: string): Promise<ResultWithValue<T>> {
-        const fileContentResult = await this.get<string>(fullUrl);
+        const fileContentResult = await this.get<T>(fullUrl);
         if (!fileContentResult.isSuccess) {
             return {
                 ...fileContentResult,
                 value: anyObject,
             }
         }
-
-        const fileObj: any = JSON.parse(fileContentResult.value);
-        return fileObj;
+        return fileContentResult;
     }
 }
 

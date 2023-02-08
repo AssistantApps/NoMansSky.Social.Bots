@@ -6,13 +6,15 @@ import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
 import { getBase64FromAssistantNmsImage, getBufferFromSvg } from '../../helper/fileHelper';
 import { getAssistantNmsApi } from "../../services/api/assistantNmsApiService";
-import { sendToot, uploadTootMedia } from "../../services/external/mastodonService";
+import { IMastodonService } from '../../services/external/mastodonService.interface';
 import { getLog } from "../../services/internal/logService";
 import { communityMissionSvgTemplate } from './communityMission.svg.template';
 
-const { Readable } = require('stream');
-
-export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta, payload: MastodonMessageEventData) => {
+export const quickSilverCompanionHandler = async (
+    clientMeta: MastodonClientMeta,
+    payload: MastodonMessageEventData,
+    mastodonService: IMastodonService
+) => {
     const scheduledDate = new Date();
     scheduledDate.setMinutes(scheduledDate.getMinutes() + 2);
 
@@ -27,7 +29,7 @@ export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta
     const qsStoreItems = await dataService.getQuicksilverStore();
 
     let compiledTemplate: string | null = null;
-    let messageToSend = `@${payload.account.username} Greetings Traveller. \nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
+    let messageToSend = ` Greetings traveller @${payload.account.username}. \nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
     try {
         const current = qsStoreItems.find((qs: QuicksilverStore) => qs.MissionId == cmResult.value.missionId);
         const itemId = current?.Items?.[(cmResult.value.currentTier - 1)]?.ItemId;
@@ -85,11 +87,11 @@ export const quickSilverCompanionHandler = async (clientMeta: MastodonClientMeta
             compiledTemplate,
             (outputFilePath: string) => {
                 const fileStream = createReadStream(outputFilePath);
-                uploadTootMedia(clientMeta, fileStream).then((mediaId) => {
+                mastodonService.uploadTootMedia(clientMeta, fileStream).then((mediaId) => {
                     // const mediaIdCacheContent = JSON.stringify([mediaId]);
                     // writeFileSync(mediaIdCache, mediaIdCacheContent);
 
-                    sendToot(clientMeta, {
+                    mastodonService.sendToot(clientMeta, {
                         ...params,
                         media_ids: [mediaId],
                     });

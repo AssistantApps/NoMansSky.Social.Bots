@@ -19,7 +19,7 @@ export const communityMissionSvgTemplate = (props: IProps) => {
 
 
   <!-- START CM status -->
-  <text x="60%" y="17.5%" width="65%" font-size="30" text-anchor="middle" fill="white" {fontFamily}>Research progress - Tier {currentTier} / {totalTiers}</text>
+  <text x="60%" y="19%" width="65%" font-size="30" text-anchor="middle" fill="white" {fontFamily}>Research progress - Tier {currentTier} / {totalTiers}</text>
 
   <!-- START CM progress bar -->
   <rect x="27%" y="27.5%" width="67%" height="10%" rx="10" fill="#000000" />
@@ -32,9 +32,9 @@ export const communityMissionSvgTemplate = (props: IProps) => {
 
   <!-- START item details -->
   <image x="1" y="50%" width="170" height="170" href="{imageUrl}" />
-  <text x="27%" y="67%" width="65%" font-size="30" text-anchor="start" fill="white" {fontFamily}>{itemName}</text>
-  <text x="34%" y="78%" width="65%" font-size="25" text-anchor="start" fill="white" {fontFamily}>{qsCost}</text>
-  <image x="27%" y="71%" width="42" height="42" href="{quicksilver.png}" />
+  <text x="27%" y="69%" width="65%" font-size="30" text-anchor="start" fill="white" {fontFamily}>{itemName}</text>
+  <text x="34%" y="80%" width="65%" font-size="25" text-anchor="start" fill="white" {fontFamily}>{qsCost}</text>
+  <image x="27%" y="73%" width="42" height="42" href="{quicksilver.png}" />
   <!-- END item details -->
 
   <text x="98.5%" y="96%" font-size="10" text-anchor="end" fill="white" {fontFamily}>{dateCreated}</text>

@@ -4,10 +4,14 @@ import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
 import { randomIntFromRange } from "../../helper/randomHelper";
 import { getGithubFileService } from "../../services/api/githubFileService";
-import { sendToot } from "../../services/external/mastodonService";
+import { IMastodonService } from "../../services/external/mastodonService.interface";
 import { getLog } from "../../services/internal/logService";
 
-export const randomDialogHandler = async (clientMeta: MastodonClientMeta, payload: MastodonMessageEventData) => {
+export const randomDialogHandler = async (
+    clientMeta: MastodonClientMeta,
+    payload: MastodonMessageEventData,
+    mastodonService: IMastodonService
+) => {
     const scheduledDate = new Date();
     scheduledDate.setMinutes(scheduledDate.getMinutes() + 2);
 
@@ -40,7 +44,7 @@ export const randomDialogHandler = async (clientMeta: MastodonClientMeta, payloa
             scheduled_at: scheduledDate.toISOString(),
         }
         getLog().i(clientMeta.name, 'random dialog response', params);
-        await sendToot(clientMeta, params);
+        await mastodonService.sendToot(clientMeta, params);
         return;
     }
 

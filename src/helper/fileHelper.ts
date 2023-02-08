@@ -1,10 +1,10 @@
 import { existsSync, mkdirSync, readdir, readFileSync, writeFileSync, unlinkSync } from "fs";
 import { join } from "path";
+import { Resvg } from '@resvg/resvg-js';
+
+import { fontMetas } from "../constants/fonts";
 import { getAssistantNmsApi } from "../services/api/assistantNmsApiService";
-
-import { getBotPath } from "../services/internal/configService";
-
-const svg2img = require('svg2img');
+import { getBotPath, getConfig } from "../services/internal/configService";
 
 export const getCachedUniqueName = () => (new Date()).getTime() / (5 * 60000); // new value every 5min
 
@@ -41,13 +41,29 @@ export const getTempFile = (filenamePrefix: string, extension: string): string =
 
 export const getBufferFromSvg = async (filenamePrefix: string, compiledTemplate: string, callback: (outputFilePath: string) => void) => {
     const outputFilePath = getTempFile(filenamePrefix, 'png');
-    // const outputFilePathsvg = getTempFile(filenamePrefix, 'svg');
-    // writeFileSync(outputFilePathsvg, compiledTemplate);
+    if (getConfig().isProd() == false) {
+        // const outputFilePathsvg = getTempFile(filenamePrefix, 'svg');
+        // writeFileSync(outputFilePathsvg, compiledTemplate);
+    }
 
-    svg2img(compiledTemplate, (error: any, buffer: any) => {
-        writeFileSync(outputFilePath, buffer);
-        callback(outputFilePath);
-    });
+    const fontFiles = fontMetas.map((fontMeta) => join(getBotPath(), fontMeta.file));
+    const opts = {
+        fitTo: {
+            mode: 'width',
+            value: 1200,
+        },
+        font: {
+            fontFiles: fontFiles,
+            defaultFontFamily: fontMetas[0].name,
+            sansSerifFamily: fontMetas[0].name,
+            loadSystemFonts: false, // It will be faster to disable loading system fonts.
+        },
+    }
+    const resvg = new Resvg(compiledTemplate, opts as any)
+    const pngData = resvg.render();
+    const buffer = pngData.asPng();
+    writeFileSync(outputFilePath, buffer);
+    callback(outputFilePath);
 }
 
 export const getBase64FromAssistantNmsImage = async (iconPath: string): Promise<string> => {

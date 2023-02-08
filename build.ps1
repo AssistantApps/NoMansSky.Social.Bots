@@ -1,18 +1,10 @@
-$version = '0.10'
+$version = '0.15'
 
-# npm ci
-# npm run build
-# npm run copy-assets
-# npm run copy-env
 
 docker build -t nms-social-npc-bots -f Dockerfile .
 
 
-# ------------------------- Tags -------------------------
+# ----------------------- Tag and push to remote -----------------------
 docker tag nms-social-npc-bots registry.local.khaoznet.xyz/nms-social-npc-bots:$version
-
-# ------------------------- Push -------------------------
 docker push registry.local.khaoznet.xyz/nms-social-npc-bots:$version
 
-
-PAUSE

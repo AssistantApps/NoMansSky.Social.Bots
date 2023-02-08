@@ -9,17 +9,17 @@ import { onMessageHandler } from './handler/messageHandler';
 import { getMastodonService } from "./services/external/mastodonService";
 import { getLog } from "./services/internal/logService";
 import { BOT_PATH, getConfig } from "./services/internal/configService";
+import { setUpCustomHttpServer } from "./integration/httpServer";
 
 require('dotenv').config();
 
+const mastoClients: Array<MastodonClientMeta> = [];
+
 const main = async () => {
-
     Container.set(BOT_PATH, __dirname);
-
     getLog().i("Starting up bot accounts");
 
     const mastoService = getMastodonService();
-    const mastoClients: Array<MastodonClientMeta> = [];
 
     const accounts = getConfig().isProd()
         ? prodCreds.accounts
@@ -43,6 +43,9 @@ const main = async () => {
     }
 
     getLog().i("Setup complete...");
+
+    const httpApp = setUpCustomHttpServer();
+    httpApp.listen(3000);
 }
 
 main();
