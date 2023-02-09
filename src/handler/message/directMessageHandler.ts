@@ -1,7 +1,7 @@
 import { BotType } from "../../constants/enum/botType";
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
-import { quickSilverCompanionHandler } from "../../features/quickSilverCompanion/quickSilverCompanion";
+import { quickSilverCompanionMentionHandler } from "../../features/quickSilverCompanion/quickSilverCompanion";
 import { randomDialogHandler } from "../../features/randomDialog/randomDialog";
 import { getMastodonService } from "../../services/external/mastodonService";
 
@@ -13,6 +13,6 @@ export const onDirectMessageHandler = async (clientMeta: MastodonClientMeta, pay
         await randomDialogHandler(clientMeta, payload, mastodonService)
     }
     if (botType == BotType.qsCompanion) {
-        await quickSilverCompanionHandler(clientMeta, payload, mastodonService)
+        await quickSilverCompanionMentionHandler(clientMeta, payload, mastodonService)
     }
 }

@@ -10,10 +10,26 @@ import { IMastodonService } from '../../services/external/mastodonService.interf
 import { getLog } from "../../services/internal/logService";
 import { communityMissionSvgTemplate } from './communityMission.svg.template';
 
-export const quickSilverCompanionHandler = async (
+export const quickSilverCompanionMentionHandler = async (
     clientMeta: MastodonClientMeta,
     payload: MastodonMessageEventData,
     mastodonService: IMastodonService
+) => {
+    quickSilverCompanionHandler(
+        clientMeta,
+        mastodonService,
+        payload.status.id,
+        payload.status.visibility,
+        payload.account.username
+    );
+}
+
+export const quickSilverCompanionHandler = async (
+    clientMeta: MastodonClientMeta,
+    mastodonService: IMastodonService,
+    replyToId?: string,
+    visibility: "public" | "unlisted" | "private" | "direct" | undefined = 'public',
+    username?: string,
 ) => {
     const scheduledDate = new Date();
     scheduledDate.setMinutes(scheduledDate.getMinutes() + 2);
@@ -29,7 +45,14 @@ export const quickSilverCompanionHandler = async (
     const qsStoreItems = await dataService.getQuicksilverStore();
 
     let compiledTemplate: string | null = null;
-    let messageToSend = ` Greetings traveller @${payload.account.username}. \nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
+    let messageToSend = `Greetings traveller`;
+    if (username != null) {
+        messageToSend += ` @${username}. `;
+    } else {
+        messageToSend += `! `;
+    }
+    messageToSend = `\nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
+
     try {
         const current = qsStoreItems.find((qs: QuicksilverStore) => qs.MissionId == cmResult.value.missionId);
         const itemId = current?.Items?.[(cmResult.value.currentTier - 1)]?.ItemId;
@@ -62,8 +85,8 @@ export const quickSilverCompanionHandler = async (
 
     const params: MastodonMakeToot = {
         status: messageToSend,
-        in_reply_to_id: payload.status.id,
-        visibility: payload.status.visibility,
+        in_reply_to_id: replyToId,
+        visibility: visibility,
         scheduled_at: scheduledDate.toISOString(),
     }
     // const mediaIdCache = getTempFile('qsCompanion-', 'json');

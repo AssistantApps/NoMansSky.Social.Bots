@@ -10,6 +10,8 @@ import { getMastodonService } from "./services/external/mastodonService";
 import { getLog } from "./services/internal/logService";
 import { BOT_PATH, getConfig } from "./services/internal/configService";
 import { setUpCustomHttpServer } from "./integration/httpServer";
+import { BotType } from "./constants/enum/botType";
+import { quickSilverCompanionHandler } from "./features/quickSilverCompanion/quickSilverCompanion";
 
 require('dotenv').config();
 
@@ -44,8 +46,18 @@ const main = async () => {
 
     getLog().i("Setup complete...");
 
-    const httpApp = setUpCustomHttpServer();
-    httpApp.listen(3000);
+    setUpCustomHttpServer({
+        onQuicksilverPush: async () => {
+            const qsMetaIndex = mastoClients.findIndex(mc => mc.type === BotType.qsCompanion);
+            if (qsMetaIndex < 0) {
+                getLog().e('Could not find mastoClient');
+                return;
+            }
+
+            const qsMeta = mastoClients[qsMetaIndex];
+            await quickSilverCompanionHandler(qsMeta.client, mastoService)
+        },
+    });
 }
 
 main();

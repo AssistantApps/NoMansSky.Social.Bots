@@ -3,7 +3,7 @@ import { Container } from "typedi";
 
 import { BotType } from "./constants/enum/botType";
 import { MastodonClientMeta } from './contracts/mastoClientMeta';
-import { quickSilverCompanionHandler } from "./features/quickSilverCompanion/quickSilverCompanion";
+import { quickSilverCompanionMentionHandler } from "./features/quickSilverCompanion/quickSilverCompanion";
 import { randomDialogHandler } from "./features/randomDialog/randomDialog";
 import { anyObject } from "./helper/typescriptHacks";
 import { MockMastodonService } from "./services/external/mastodonService.mock";
@@ -41,7 +41,7 @@ const testMain = async () => {
 }
 
 const testQuicksilverCompanion = async () => {
-    await quickSilverCompanionHandler(fakeClientMeta, fakePayload, fakeMastodonService);
+    await quickSilverCompanionMentionHandler(fakeClientMeta, fakePayload, fakeMastodonService);
 }
 
 const testRandomDialogHandler = async () => {
