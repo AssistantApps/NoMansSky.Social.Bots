@@ -1,17 +1,17 @@
 import "reflect-metadata";
 import { Container } from "typedi";
 
-import prodCreds from './assets/data/credentials.json';
 import devCreds from './assets/data/credentials.dev.json';
+import prodCreds from './assets/data/credentials.json';
+import { BotType } from "./constants/enum/botType";
 import { MastodonClientMeta } from './contracts/mastoClientMeta';
+import { quickSilverCompanionHandler } from "./features/quickSilverCompanion/quickSilverCompanion";
 import { onErrorHandler } from './handler/errorHandler';
 import { onMessageHandler } from './handler/messageHandler';
-import { getMastodonService } from "./services/external/mastodonService";
-import { getLog } from "./services/internal/logService";
-import { BOT_PATH, getConfig } from "./services/internal/configService";
 import { setUpCustomHttpServer } from "./integration/httpServer";
-import { BotType } from "./constants/enum/botType";
-import { quickSilverCompanionHandler } from "./features/quickSilverCompanion/quickSilverCompanion";
+import { getMastodonService } from "./services/external/mastodonService";
+import { BOT_PATH, getConfig } from "./services/internal/configService";
+import { getLog } from "./services/internal/logService";
 
 require('dotenv').config();
 
