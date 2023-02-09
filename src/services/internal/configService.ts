@@ -6,6 +6,9 @@ export class ConfigService {
     getMastodonTimeout = (): number => this.get<number>('MASTODON_TIMEOUT_MS');
     getAssistantNMSUrl = (): string => this.get<string>('ANMS_API_URL');
     getAssistantAppsUrl = (): string => this.get<string>('AA_API_URL');
+    getXataApiKey = (): string => this.get<string>('XATA_API_KEY');
+    getXataDbUrl = (): string => this.get<string>('XATA_DB_URL');
+    getXataFallbackBranch = (): string => this.get<string>('XATA_FALLBACK_BRANCH');
 
     get<T>(property: string): T {
         return (process.env?.[property] ?? '') as T;

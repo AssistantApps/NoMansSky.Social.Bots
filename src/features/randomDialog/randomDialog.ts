@@ -4,7 +4,7 @@ import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
 import { randomIntFromRange } from "../../helper/randomHelper";
 import { getGithubFileService } from "../../services/api/githubFileService";
-import { IMastodonService } from "../../services/external/mastodonService.interface";
+import { IMastodonService } from "../../services/external/mastodon/mastodonService.interface";
 import { getLog } from "../../services/internal/logService";
 
 export const randomDialogHandler = async (

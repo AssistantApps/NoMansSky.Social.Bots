@@ -1,8 +1,8 @@
 import fs from "fs";
-import { ICredential } from "../../contracts/credential";
-import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
-import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
-import { getLog } from "../internal/logService";
+import { ICredential } from "../../../contracts/credential";
+import { MastodonClientMeta } from "../../../contracts/mastoClientMeta";
+import { MastodonMakeToot } from "../../../contracts/mastodonMakeToot";
+import { getLog } from "../../internal/logService";
 import { IMastodonService } from "./mastodonService.interface";
 
 export class MockMastodonService implements IMastodonService {

@@ -6,7 +6,7 @@ import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
 import { getBase64FromAssistantNmsImage, getBufferFromSvg } from '../../helper/fileHelper';
 import { getAssistantNmsApi } from "../../services/api/assistantNmsApiService";
-import { IMastodonService } from '../../services/external/mastodonService.interface';
+import { IMastodonService } from '../../services/external/mastodon/mastodonService.interface';
 import { getLog } from "../../services/internal/logService";
 import { communityMissionSvgTemplate } from './communityMission.svg.template';
 

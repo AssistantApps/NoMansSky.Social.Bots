@@ -1,10 +1,10 @@
 import fs from "fs";
 import { Container, Inject, Service } from "typedi";
-import { ICredential } from "../../contracts/credential";
-import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
-import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
-import { ConfigService } from "../internal/configService";
-import { getLog } from "../internal/logService";
+import { ICredential } from "../../../contracts/credential";
+import { MastodonClientMeta } from "../../../contracts/mastoClientMeta";
+import { MastodonMakeToot } from "../../../contracts/mastodonMakeToot";
+import { ConfigService } from "../../internal/configService";
+import { getLog } from "../../internal/logService";
 import { IMastodonService } from "./mastodonService.interface";
 
 const Mastodon = require('mastodon-api');

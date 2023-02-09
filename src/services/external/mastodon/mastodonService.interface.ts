@@ -1,7 +1,7 @@
 import fs from "fs";
-import { ICredential } from "../../contracts/credential";
-import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
-import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
+import { ICredential } from "../../../contracts/credential";
+import { MastodonClientMeta } from "../../../contracts/mastoClientMeta";
+import { MastodonMakeToot } from "../../../contracts/mastodonMakeToot";
 
 export interface IMastodonService {
     createClient(cred: ICredential): any;

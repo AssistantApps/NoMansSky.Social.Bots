@@ -10,11 +10,10 @@ import { getDatabaseService } from '../../services/external/database/databaseSer
 import { IMastodonService } from '../../services/external/mastodon/mastodonService.interface';
 import { getLog } from "../../services/internal/logService";
 
-export const cronusHandler = async (
+export const randomPortalHandler = async (
     clientMeta: MastodonClientMeta,
     mastodonService: IMastodonService,
 ) => {
-    const databaseService = getDatabaseService();
 
     // const scheduledDate = new Date();
     // scheduledDate.setMinutes(scheduledDate.getMinutes() + 2);
