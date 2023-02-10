@@ -9,7 +9,7 @@ import { quickSilverCompanionHandler } from "./features/quickSilverCompanion/qui
 import { onErrorHandler } from './handler/errorHandler';
 import { onMessageHandler } from './handler/messageHandler';
 import { setUpCustomHttpServer } from "./integration/httpServer";
-import { getMastodonService } from "./services/external/mastodonService";
+import { getMastodonService } from "./services/external/mastodon/mastodonService";
 import { BOT_PATH, getConfig } from "./services/internal/configService";
 import { getLog } from "./services/internal/logService";
 

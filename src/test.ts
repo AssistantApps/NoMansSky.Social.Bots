@@ -6,7 +6,7 @@ import { MastodonClientMeta } from './contracts/mastoClientMeta';
 import { quickSilverCompanionMentionHandler } from "./features/quickSilverCompanion/quickSilverCompanion";
 import { randomDialogHandler } from "./features/randomDialog/randomDialog";
 import { anyObject } from "./helper/typescriptHacks";
-import { MockMastodonService } from "./services/external/mastodonService.mock";
+import { MockMastodonService } from "./services/external/mastodon/mastodonService.mock";
 import { BOT_PATH } from "./services/internal/configService";
 import { getLog } from "./services/internal/logService";
 

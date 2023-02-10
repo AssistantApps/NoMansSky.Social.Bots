@@ -3,7 +3,7 @@ import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
 import { quickSilverCompanionMentionHandler } from "../../features/quickSilverCompanion/quickSilverCompanion";
 import { randomDialogHandler } from "../../features/randomDialog/randomDialog";
-import { getMastodonService } from "../../services/external/mastodonService";
+import { getMastodonService } from "../../services/external/mastodon/mastodonService";
 
 export const onDirectMessageHandler = async (clientMeta: MastodonClientMeta, payload: MastodonMessageEventData) => {
     const botType = clientMeta.type;

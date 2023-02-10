@@ -1,4 +1,5 @@
 node_modules
+dist
 /src/assets/data/credentials.json
 /.env
 /scripts/output/*.json

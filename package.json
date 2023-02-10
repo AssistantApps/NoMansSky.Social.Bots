@@ -4,13 +4,19 @@
   "description": "",
   "author": "Kurt Lourens",
   "homepage": "https://github.com/AssistantApps/NoMansSky.Social.Bots#readme",
+  "licence": "MIT",
   "scripts": {
     "build": "rimraf ./build && tsc",
     "copy-assets": "copyfiles -u 2 ./src/assets/**/* ./build/assets",
     "copy-env": "copyfiles ./.env ./build/",
-    "start": "npm run build && node build/index.js",
+    "start": "npm run build && node build/server.js",
     "start:dev": "npx nodemon",
-    "start:test": "npx ts-node ./src/test.ts"
+    "start:test": "npx ts-node ./src/test.ts",
+    "admin": "vite",
+    "admin:dev": "vite",
+    "admin:build": "vite build",
+    "admin:serve": "vite preview",
+    "admin:tauri": "tauri dev"
   },
   "repository": {
     "type": "git",
@@ -22,6 +28,7 @@
   "dependencies": {
     "@koa/router": "^12.0.0",
     "@resvg/resvg-js": "^2.3.1",
+    "@tauri-apps/api": "^1.2.0",
     "@types/koa": "^2.13.5",
     "@xata.io/client": "^0.22.1",
     "assistantapps-nomanssky-info": "^4.8.4734",
@@ -34,11 +41,20 @@
     "typedi": "^0.10.0"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^1.2.2",
     "@types/koa__router": "^12.0.0",
     "@types/node": "^18.11.19",
     "copyfiles": "^2.4.1",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "vite": "^4.0.0",
+    "vite-plugin-solid": "^2.3.0",
+    "@hope-ui/solid": "^0.6.7",
+    "@solidjs/router": "^0.7.0",
+    "@stitches/core": "^1.2.8",
+    "sass": "^1.58.0",
+    "solid-js": "^1.6.6",
+    "solid-transition-group": "^0.0.10"
   }
 }

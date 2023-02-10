@@ -1,0 +1,78 @@
+@import "var";
+@import "mastodon";
+@import "scrollbar";
+@import "breakpoint";
+
+:root {
+    --bg-color: #151718;
+    --bg-hover-color: #0b0b0c;
+    --line-gray-color: #8c9297;
+    --content-text: $primaryColour;
+    --link-color: $linkColour;
+    --error-text-color: #8b0000;
+    --text-max-lines: none;
+}
+
+html body {
+    font-family: "Quicksand", sans-serif;
+
+    ::selection {
+        background: #662954;
+        color: white;
+    }
+
+    ::-moz-selection {
+        background: #662954;
+        color: white;
+    }
+
+    a {
+        color: $linkColour;
+    }
+}
+
+.hide-scrollbar {
+    border-right: 5px solid rgba(0, 0, 0, 0.2);
+    transition: all 500ms ease-in-out;
+
+    .content {
+        transition: all 250ms ease-in-out;
+        transition-delay: 0;
+    }
+
+    &.close .content {
+        transition-delay: 250ms;
+    }
+
+    .drawer-icon {
+        position: absolute;
+        top: 1em;
+        right: -1.5em;
+        transition: all 500ms ease-in-out;
+        box-shadow: none;
+
+        &.close {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.max-lines-1 {
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+}
