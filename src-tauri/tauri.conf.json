@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "nomanssky-social-admin",
+    "productName": "No Man's Sky Social - Admin",
     "version": "0.0.0"
   },
   "tauri": {
@@ -16,6 +16,15 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "path": {
+        "all": true
+      },
+      "fs": {
+        "all": true,
+        "scope": [
+          "**"
+        ]
       }
     },
     "bundle": {
@@ -33,7 +42,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.assistantapps.nmssocialadmin",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -42,7 +51,9 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "../src/assets/data/credentials.json"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {
@@ -60,10 +71,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 800,
         "resizable": true,
         "title": "NMS Social - Admin",
-        "width": 800
+        "width": 1000
       }
     ]
   }

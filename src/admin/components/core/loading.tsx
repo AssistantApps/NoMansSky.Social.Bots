@@ -3,7 +3,7 @@ import { Component } from "solid-js";
 
 export const CenterLoading: Component = () => {
     return (
-        <Center mt="$4">
+        <Center height="100vh">
             <LoadingSpinner />
         </Center>
     );

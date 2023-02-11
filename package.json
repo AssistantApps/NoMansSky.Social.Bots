@@ -14,9 +14,10 @@
     "start:test": "npx ts-node ./src/test.ts",
     "admin": "vite",
     "admin:dev": "vite",
-    "admin:build": "vite build",
+    "admin:build": "rimraf ./build && vite build",
     "admin:serve": "vite preview",
-    "admin:tauri": "tauri dev"
+    "admin:tauri": "tauri dev",
+    "admin:tauri-build": "tauri build --debug"
   },
   "repository": {
     "type": "git",

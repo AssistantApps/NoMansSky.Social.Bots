@@ -1,11 +1,14 @@
 import { ElementType, Flex, Text, TextProps, VStack, Image, Box, IconButton } from "@hope-ui/solid";
-import { Component, createSignal } from "solid-js";
+import { Component, createSignal, For, useContext } from "solid-js";
 import { SidebarNavLink } from "./sidebarNavLink";
 import logo from "../../../assets/img/logo.svg";
 import { routes } from "../../constants/route";
 import { Link } from "@solidjs/router";
+import { CredentialsContext } from "../../context/credentials.context";
+import { allBotTypes } from "../../../constants/enum/botType";
 
 export const Sidebar: Component = () => {
+    const creds = useContext(CredentialsContext);
     const [isHidden, setHidden] = createSignal(false);
 
     const SidebarTitle = <C extends ElementType = "p">(props: TextProps<C>) => {
@@ -52,8 +55,25 @@ export const Sidebar: Component = () => {
                     <Box m={20} />
                     <SidebarTitle mb="$2">Quick links</SidebarTitle>
                     <VStack alignItems="flex-start" spacing="$1" mb="$6">
-                        <SidebarNavLink href={routes.quicksilver}>Quicksilver Companion</SidebarNavLink>
                         <SidebarNavLink href={routes.about}>About</SidebarNavLink>
+                    </VStack>
+                    <Box m={20} />
+                    <SidebarTitle mb="$2">Bot links</SidebarTitle>
+                    <VStack alignItems="flex-start" spacing="$1" mb="$6">
+                        <For each={allBotTypes()}>{
+                            (botProp) => {
+                                const botCredsIndex = (creds?.accounts ?? []).findIndex(acc => acc.type === botProp);
+                                if (botCredsIndex < 0) {
+                                    return;
+                                }
+                                const botCreds = creds!.accounts[botCredsIndex];
+                                return (
+                                    <SidebarNavLink href={routes.genericBotWithId.replace(routes.genericBotParam, botProp)}>
+                                        {botCreds.name}
+                                    </SidebarNavLink>
+                                );
+                            }
+                        }</For>
                     </VStack>
                 </Box>
                 <IconButton

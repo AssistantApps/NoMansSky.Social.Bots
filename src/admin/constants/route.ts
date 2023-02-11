@@ -1,5 +1,11 @@
+const genericBotParam = ':id';
+
 export const routes = {
     home: '/',
-    quicksilver: '/quicksilver',
+
+    genericBotParam,
+    genericBot: '/bot',
+    genericBotWithId: '/bot/${genericBotParam}',
+
     about: '/about',
 }

@@ -1,4 +1,4 @@
-/* @refresh reload */
+import "reflect-metadata";
 import { render } from 'solid-js/web';
 import { Router } from '@solidjs/router';
 import { AppShell } from './admin/appShell';

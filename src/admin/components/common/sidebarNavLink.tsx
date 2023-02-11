@@ -14,7 +14,6 @@ const StyledNavLink = hope(NavLink, {
         px: "$3",
         color: "$neutral12",
         fontSize: "$sm",
-        lineHeight: "$none",
         textDecoration: "none",
         transition: "color 250ms, background-color 250ms",
 
@@ -39,7 +38,7 @@ export const SidebarNavLink = (props: SidebarNavLinkProps) => {
 
     return (
         <StyledNavLink href={local.href} {...others}>
-            {local.children}
+            <span class="max-lines-1">{local.children}</span>
         </StyledNavLink>
     );
 }

@@ -1,6 +1,6 @@
 import fs from "fs";
 import { Container, Inject, Service } from "typedi";
-import { ICredential } from "../../../contracts/credential";
+import { ICredentialItem } from "../../../contracts/credential";
 import { MastodonClientMeta } from "../../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../../contracts/mastodonMakeToot";
 import { ConfigService } from "../../internal/configService";
@@ -14,7 +14,7 @@ export class MastodonService implements IMastodonService {
     @Inject()
     config: ConfigService;
 
-    createClient(cred: ICredential): any {
+    createClient(cred: ICredentialItem): any {
         return new Mastodon({
             client_key: cred.clientKey,
             client_secret: cred.clientSecret,
