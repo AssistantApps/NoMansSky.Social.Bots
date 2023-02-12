@@ -3,6 +3,8 @@ import { Route, Routes } from "@solidjs/router";
 import { Component, createSignal, lazy, onMount, Show, Suspense } from 'solid-js';
 import { NetworkState } from "../constants/enum/networkState";
 import { ICredential } from "../contracts/credential";
+import { decrypt } from "../helper/cryptoHelper";
+import { getConfig } from "../services/internal/configService";
 import { getLog } from "../services/internal/logService";
 import { Sidebar } from './components/common/sidebar';
 import { CenterLoading } from './components/core/loading';
@@ -25,11 +27,11 @@ export const AppShell: Component = () => {
     });
 
     const loadConfig = async () => {
-        getLog().i('loadConfig')
         try {
+            const encryptionKey = getConfig().getEncryptionKey();
             const resourceString = await loadTauriResource(tauriFile.config);
-            getLog().i(resourceString)
-            const arrayContent = JSON.parse(resourceString);
+            const decryptedString = decrypt(encryptionKey, resourceString)
+            const arrayContent = JSON.parse(decryptedString);
             setCredentials(arrayContent);
             setNetworkState(NetworkState.Success);
         } catch (err) {

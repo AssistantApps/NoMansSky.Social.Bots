@@ -13,7 +13,7 @@ import { getLog } from "./services/internal/logService";
 require('dotenv').config();
 
 const fakeClientMeta: MastodonClientMeta = {
-    type: BotType.test,
+    type: BotType.unknown,
     name: 'test',
     dialog: 'ariadne',
     client: anyObject,

@@ -8,3 +8,4 @@ dist
 /src/temp
 /src/assets/data/credentials.prod.json
 /src/assets/data/credentials.dev.json
+/src/assets/data/credentials.enc.json

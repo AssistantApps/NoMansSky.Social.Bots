@@ -52,7 +52,7 @@
         "signingIdentity": null
       },
       "resources": [
-        "../src/assets/data/credentials.json"
+        "../src/assets/data/credentials.enc.json"
       ],
       "shortDescription": "",
       "targets": "all",
