@@ -9,7 +9,7 @@ export interface ICredentialItem {
     name: string;
     type: BotType;
     dialog: string;
-    userId: number;
+    userId: string;
     profileName: string;
     clientKey: string;
     clientSecret: string;

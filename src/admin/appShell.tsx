@@ -1,4 +1,4 @@
-import { Box, Container, Flex, hope } from "@hope-ui/solid";
+import { Box, Flex, hope } from "@hope-ui/solid";
 import { Route, Routes } from "@solidjs/router";
 import { Component, createSignal, lazy, onMount, Show, Suspense } from 'solid-js';
 import { NetworkState } from "../constants/enum/networkState";

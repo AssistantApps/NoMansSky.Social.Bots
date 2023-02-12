@@ -5,7 +5,7 @@ export const routes = {
 
     genericBotParam,
     genericBot: '/bot',
-    genericBotWithId: '/bot/${genericBotParam}',
+    genericBotWithId: `/bot/${genericBotParam}`,
 
     about: '/about',
 }

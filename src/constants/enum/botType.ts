@@ -1,7 +1,7 @@
 export enum BotType {
     unknown = 'unknown',
     ariadne = 'ariadne',
-    ariadne1 = 'ariadne1',
+    theRealAriadne = 'theRealAriadne',
     qsCompanion = 'qsCompanion',
 }
 
