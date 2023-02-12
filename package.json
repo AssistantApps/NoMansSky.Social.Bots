@@ -43,7 +43,6 @@
   },
   "devDependencies": {
     "@hope-ui/solid": "^0.6.7",
-    "@import-meta-env/unplugin": "^0.4.3",
     "@solidjs/router": "^0.7.0",
     "@stitches/core": "^1.2.8",
     "@tauri-apps/cli": "^1.2.2",

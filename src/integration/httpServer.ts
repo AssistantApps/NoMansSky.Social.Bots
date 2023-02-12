@@ -9,7 +9,7 @@ interface IHttpServerProps {
 }
 
 export const setUpCustomHttpServer = (props: IHttpServerProps) => {
-    getLog().i("Starting up bot accounts");
+    getLog().i("Starting up http server");
     const app = new Koa();
 
     // route definitions
@@ -19,7 +19,7 @@ export const setUpCustomHttpServer = (props: IHttpServerProps) => {
 
     app.use(router.routes());
 
-    getLog().i("Setup complete...");
+    getLog().i("HTTP setup complete...");
 
     app.listen(3000);
 }

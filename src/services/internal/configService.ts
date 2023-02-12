@@ -1,5 +1,4 @@
 import { Container, Service, Token } from "typedi";
-import { anyObject } from "../../helper/typescriptHacks";
 
 @Service()
 export class ConfigService {
@@ -13,23 +12,9 @@ export class ConfigService {
     getXataFallbackBranch = (): string => this.get<string>('XATA_FALLBACK_BRANCH');
 
     get<T>(property: string): T {
-        let correctedProp = '';
-        let envObj = anyObject;
-
-        if (this.isVite()) {
-            correctedProp = `VITE_${property}`
-            envObj = import.meta.env;
-        } else {
-            correctedProp = property;
-            envObj = process.env;
-        }
-
-        // console.log({ envObj });
-        // console.log(correctedProp);
-        return (envObj?.[correctedProp] ?? '') as T;
+        return (process.env?.[property] ?? '') as T;
     };
 
-    isVite = () => import.meta != null;
     isProd = () => this.get<string>('NODE_ENV') === 'production';
 }
 
