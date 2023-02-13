@@ -1,4 +1,4 @@
-import { BotType } from "../../constants/enum/botType";
+import { botsThatUsRandomDialog, BotType } from "../../constants/enum/botType";
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
 import { quickSilverCompanionMentionHandler } from "../../features/quickSilverCompanion/quickSilverCompanion";
@@ -9,10 +9,11 @@ export const onDirectMessageHandler = async (clientMeta: MastodonClientMeta, pay
     const botType = clientMeta.type;
     const mastodonService = getMastodonService();
 
-    if (botType == BotType.ariadne || botType == BotType.ariadne1) {
-        await randomDialogHandler(clientMeta, payload, mastodonService)
+    if (botsThatUsRandomDialog().includes(botType)) {
+        await randomDialogHandler(clientMeta, payload, mastodonService);
     }
+
     if (botType == BotType.qsCompanion) {
-        await quickSilverCompanionMentionHandler(clientMeta, payload, mastodonService)
+        await quickSilverCompanionMentionHandler(clientMeta, payload, mastodonService);
     }
 }

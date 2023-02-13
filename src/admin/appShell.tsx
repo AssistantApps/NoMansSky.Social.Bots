@@ -12,7 +12,7 @@ import { CredentialsContext } from './context/credentials.context';
 import { loadTauriResource } from "./helper/tauriHelper";
 
 const HomePage = lazy(() => import("./pages/home"));
-const GenericBot = lazy(() => import("./pages/genericBot"));
+const GenericBot = lazy(() => import("./pages/genericBot/genericBot"));
 const AboutPage = lazy(() => import("./pages/about"));
 const NotAuthedPage = lazy(() => import("./pages/notAuthed"));
 
@@ -51,10 +51,11 @@ export const AppShell: Component = () => {
                 <CredentialsContext.Provider value={credentials()}>
                     <Flex>
                         <Sidebar />
-                        <hope.main w="$full">
+                        <hope.main w="$full" pl="3em">
                             <Suspense fallback={<CenterLoading />} >
                                 <Routes>
                                     <Route path={routes.home} component={HomePage} />
+                                    <Route path={routes.home2} component={HomePage} />
                                     <Route path={routes.genericBot} component={GenericBot} />
                                     <Route path={routes.genericBotWithId} component={GenericBot} />
                                     <Route path={routes.about} component={AboutPage} />

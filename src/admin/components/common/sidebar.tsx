@@ -1,11 +1,11 @@
-import { ElementType, Flex, Text, TextProps, VStack, Image, Box, IconButton } from "@hope-ui/solid";
+import { ElementType, Flex, Text, TextProps, VStack, Image, Box, IconButton, Heading, Center, Spacer, Divider } from "@hope-ui/solid";
 import { Component, createSignal, For, useContext } from "solid-js";
 import { SidebarNavLink } from "./sidebarNavLink";
-import logo from "../../../assets/img/logo.svg";
 import { routes } from "../../constants/route";
 import { Link } from "@solidjs/router";
 import { CredentialsContext } from "../../context/credentials.context";
 import { allBotTypes } from "../../../constants/enum/botType";
+import { getLog } from "../../../services/internal/logService";
 
 export const Sidebar: Component = () => {
     const creds = useContext(CredentialsContext);
@@ -13,10 +13,11 @@ export const Sidebar: Component = () => {
 
     const SidebarTitle = <C extends ElementType = "p">(props: TextProps<C>) => {
         return (
-            <Text as="span"
+            <Text
                 fontSize="$sm"
                 fontWeight="$bold"
                 textTransform="uppercase"
+                mb="$2"
                 {...props}
             />
         );
@@ -49,21 +50,32 @@ export const Sidebar: Component = () => {
         >
             <>
                 <Box class="content" opacity={isHidden() ? '0' : '1'}>
-                    <Link href={routes.home}>
-                        <Image src={logo} />
-                    </Link>
+                    <Box ml="-2em">
+                        <Link href={routes.home}>
+                            <Flex>
+                                <Image src="/assets/img/logox100.png" alt="logo" width="25%" />
+                                <Box m="$2" />
+                                <Center>
+                                    <Heading>NMS Social <br />Admin app</Heading>
+                                </Center>
+                            </Flex>
+                            <Box m={20} />
+                            <Divider />
+                        </Link>
+                    </Box>
                     <Box m={20} />
-                    <SidebarTitle mb="$2">Quick links</SidebarTitle>
+                    <SidebarTitle>Quick links</SidebarTitle>
                     <VStack alignItems="flex-start" spacing="$1" mb="$6">
-                        <SidebarNavLink href={routes.about}>About</SidebarNavLink>
+                        <SidebarNavLink href={routes.home2}>Home</SidebarNavLink>
                     </VStack>
                     <Box m={20} />
-                    <SidebarTitle mb="$2">Bot links</SidebarTitle>
+                    <SidebarTitle>Bot links</SidebarTitle>
                     <VStack alignItems="flex-start" spacing="$1" mb="$6">
                         <For each={allBotTypes()}>{
                             (botProp) => {
                                 const botCredsIndex = (creds?.accounts ?? []).findIndex(acc => acc.type === botProp);
                                 if (botCredsIndex < 0) {
+                                    getLog().e(`Could not find bot ${botProp}`)
                                     return;
                                 }
                                 const botCreds = creds!.accounts[botCredsIndex];
@@ -79,9 +91,10 @@ export const Sidebar: Component = () => {
                 <IconButton
                     colorScheme="primary"
                     aria-label="Close drawer"
+                    borderRadius="2em"
                     class={isHidden() ? 'drawer-icon expand' : 'drawer-icon close'}
                     onClick={() => setHidden(!isHidden())}
-                    icon={<span>➤</span>}
+                    icon={<span>☰</span>}
                 />
             </>
         </Flex>
