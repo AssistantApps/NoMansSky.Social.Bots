@@ -101,6 +101,9 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "exclude": [
-      "scripts"
+      "scripts",
+      "public/assets",
+      "dist/assets/js/mastodon.widget.js",
+      "vite.config.ts"
   ]
 }
