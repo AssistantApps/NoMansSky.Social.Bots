@@ -1,14 +1,18 @@
 import { Box, Flex, hope } from "@hope-ui/solid";
 import { Route, Routes } from "@solidjs/router";
 import { Component, createSignal, lazy, onMount, Show, Suspense } from 'solid-js';
+
+import adminVersion from '../assets/data/admin-version.json';
 import { NetworkState } from "../constants/enum/networkState";
 import { ICredential } from "../contracts/credential";
+import { getGithubFileService } from "../services/api/githubFileService";
 import { getLog } from "../services/internal/logService";
 import { Sidebar } from './components/common/sidebar';
 import { CenterLoading } from './components/core/loading';
 import { routes } from './constants/route';
 import { tauriFile } from "./constants/tauri";
 import { CredentialsContext } from './context/credentials.context';
+import { confirmationPopup, CopyPopup } from "./helper/popupHelper";
 import { loadTauriResource } from "./helper/tauriHelper";
 
 const HomePage = lazy(() => import("./pages/home"));
@@ -21,19 +25,47 @@ export const AppShell: Component = () => {
     const [credentials, setCredentials] = createSignal<ICredential>();
 
     onMount(() => {
-        loadConfig();
+        loadAndCompareVersions();
     });
 
-    const loadConfig = async () => {
+    const loadAndCompareVersions = async () => {
+        let localCreds: ICredential | null = null;
         try {
             const resourceString = await loadTauriResource(tauriFile.config);
-            const arrayContent = JSON.parse(resourceString);
-            setCredentials(arrayContent);
-            setNetworkState(NetworkState.Success);
+            localCreds = JSON.parse(resourceString);
         } catch (err) {
             getLog().e(err);
             setNetworkState(NetworkState.Error);
+            return;
         }
+
+        if (localCreds == null) {
+            getLog().e('localcreds are empty');
+            setNetworkState(NetworkState.Error);
+        }
+
+        const githubFileService = getGithubFileService();
+        const versionResult = await githubFileService.getVersionFile();
+
+        if (versionResult.isSuccess && versionResult.value.code > adminVersion.code) {
+            const isConfirmed = await confirmationPopup({
+                title: 'Use the latest Admin UI?',
+                confirmButtonText: 'Use the latest!',
+            });
+            if (isConfirmed) {
+                await CopyPopup({
+                    title: 'Click to copy credentials',
+                    description: 'Then paste the creds into the next page',
+                    textToCopy: JSON.stringify(localCreds),
+                });
+                setTimeout(() => {
+                    window.location.href = 'https://admin.nomanssky.social/';
+                }, 1);
+            }
+        }
+
+        setCredentials(localCreds!);
+        setNetworkState(NetworkState.Success);
     }
 
     return (
