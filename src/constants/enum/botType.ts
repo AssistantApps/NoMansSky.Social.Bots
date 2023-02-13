@@ -5,4 +5,10 @@ export enum BotType {
     qsCompanion = 'qsCompanion',
 }
 
-export const allBotTypes = () => Object.keys(BotType);
+export const allBotTypes = () => Object.keys(BotType).filter(bt => bt != BotType.unknown);
+
+
+export const botsThatUsRandomDialog = () => [
+    BotType.ariadne,
+    BotType.theRealAriadne,
+]

@@ -11,6 +11,7 @@ export interface ICredentialItem {
     dialog: string;
     userId: string;
     profileName: string;
+    imageUrl: string;
     clientKey: string;
     clientSecret: string;
     accessToken: string;

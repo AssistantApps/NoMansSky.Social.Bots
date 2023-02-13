@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "lib": [
+      "es2021",
+      "dom"
+    ],
+    "jsx": "preserve",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "module": "commonjs",
+    "rootDir": "src",
+    "moduleResolution": "Node",
+    "types": [
+      "vite/client"
+    ],
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "outDir": "build",
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules", 
+    "**/*.spec.ts",
+    "build",
+    "public",
+    "scripts",
+    "src/admin.tsx",
+    "src/admin/**/*",
+    "./vite.config.ts"
+  ]
+}

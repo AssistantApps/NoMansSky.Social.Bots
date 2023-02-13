@@ -6,14 +6,14 @@
   "homepage": "https://github.com/AssistantApps/NoMansSky.Social.Bots#readme",
   "licence": "MIT",
   "scripts": {
-    "build": "rimraf ./build && tsc",
+    "build": "rimraf ./build && tsc -p ./tsconfig.server.json",
     "copy-assets": "copyfiles -u 2 ./src/assets/**/* ./build/assets",
     "copy-env": "copyfiles ./.env ./build/",
     "start": "npm run build && node build/server.js",
     "start:dev": "npx nodemon",
-    "start:test": "npx ts-node ./src/test.ts",
+    "start:test": "npx ts-node -p ./tsconfig.server.json ./src/test.ts",
     "admin": "vite",
-    "admin:encrypt": "npx ts-node ./src/encrypt.ts",
+    "admin:encrypt": "npx ts-node -p ./tsconfig.server.json ./src/encrypt.ts",
     "admin:dev": "vite",
     "admin:build": "vite build",
     "admin:serve": "vite preview",
@@ -39,7 +39,8 @@
     "koa": "^2.14.1",
     "mastodon-api": "^1.3.0",
     "reflect-metadata": "^0.1.13",
-    "typedi": "^0.10.0"
+    "typedi": "^0.10.0",
+    "vite-plugin-dts": "^1.7.2"
   },
   "devDependencies": {
     "@hope-ui/solid": "^0.6.7",

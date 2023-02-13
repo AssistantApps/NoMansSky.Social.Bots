@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import { Container } from "typedi";
 
 import devCreds from './assets/data/credentials.dev.json';
@@ -23,11 +23,11 @@ const main = async () => {
 
     const mastoService = getMastodonService();
 
-    const accounts = getConfig().isProd()
-        ? prodCreds.accounts
-        : devCreds.accounts;
+    const credentialObj = getConfig().isProd()
+        ? prodCreds
+        : devCreds;
 
-    for (const cred of accounts) {
+    for (const cred of credentialObj.accounts) {
         const credAsAny: any = (cred as any);
         mastoClients.push({
             ...credAsAny,
@@ -47,6 +47,7 @@ const main = async () => {
     getLog().i("Setup complete...");
 
     setUpCustomHttpServer({
+        authToken: credentialObj.apiAuthToken,
         onQuicksilverPush: async () => {
             const qsMetaIndex = mastoClients.findIndex(mc => mc.type === BotType.qsCompanion);
             if (qsMetaIndex < 0) {
