@@ -1,10 +1,11 @@
-import "reflect-metadata";
-import Koa from 'koa';
+import 'reflect-metadata';
 import Router from '@koa/router';
+import Koa from 'koa';
 
 import { getLog } from "../services/internal/logService";
 
 interface IHttpServerProps {
+    authToken: string;
     onQuicksilverPush: () => Promise<void>
 }
 
@@ -15,7 +16,7 @@ export const setUpCustomHttpServer = (props: IHttpServerProps) => {
     // route definitions
     const router = new Router();
     router.get('/', defaultEndpoint);
-    router.get('/qs', qsEndpoint(props.onQuicksilverPush));
+    router.get('/qs', qsEndpoint(props.authToken, props.onQuicksilverPush));
 
     app.use(router.routes());
 
@@ -30,8 +31,16 @@ const defaultEndpoint = async (ctx: Koa.DefaultContext, next: () => Promise<any>
     await next();
 }
 
-const qsEndpoint = (onQuicksilverPush: () => Promise<void>) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
-    // TODO check authHeader
+const qsEndpoint = (
+    authToken: string,
+    onQuicksilverPush: () => Promise<void>
+) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
+    const currentAuthHeader = ctx.get('Authorization') ?? '';
+    if (currentAuthHeader.localeCompare(authToken) != 0) {
+        ctx.body = '<h1>Unauthorized</h1>';
+        await next();
+        return;
+    }
 
     await onQuicksilverPush();
 

@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import { render } from 'solid-js/web';
 import { Router } from '@solidjs/router';
 

@@ -70,7 +70,7 @@ export const GenericBotPage: Component = () => {
         if (botmeta == null) return;
 
         try {
-            window.loadMasto({
+            (window as any).loadMasto({
                 container_body_id: 'bot-timeline',
                 instance_uri: 'https://nomanssky.social',
                 user_id: botmeta.userId,
