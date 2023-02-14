@@ -51,7 +51,7 @@ export const quickSilverCompanionHandler = async (
     } else {
         messageToSend += `! `;
     }
-    messageToSend = `\nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
+    messageToSend += `\nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
 
     try {
         const current = qsStoreItems.find((qs: QuicksilverStore) => qs.MissionId == cmResult.value.missionId);
