@@ -14,8 +14,8 @@ export interface LastStatus {
     in_reply_to_account_id: null | string;
     sensitive: boolean;
     spoiler_text: string;
-    visibility: Visibility;
-    language: Language;
+    visibility: string;
+    language: string;
     uri: string;
     url: string;
     replies_count: number;
@@ -44,17 +44,9 @@ export interface Application {
     website: null | string;
 }
 
-export enum Language {
-    En = "en",
-}
-
 export interface Mention {
     id: string;
     username: string;
     url: string;
     acct: string;
-}
-
-export enum Visibility {
-    Direct = "direct",
 }

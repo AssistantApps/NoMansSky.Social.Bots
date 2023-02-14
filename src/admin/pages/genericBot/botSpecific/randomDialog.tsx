@@ -57,7 +57,7 @@ export const RandomDialogBotSpecific: Component<IProps> = (props: IProps) => {
                         <For each={dialogOptions()}>{
                             (dialogOpt) => {
                                 return (
-                                    <ListItem>{dialogOpt.type} - {dialogOpt.message}</ListItem>
+                                    <ListItem>{dialogOpt.message}</ListItem>
                                 );
                             }
                         }</For>

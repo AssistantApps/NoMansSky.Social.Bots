@@ -5,6 +5,12 @@
     .content {
         transition: all 250ms ease-in-out;
         transition-delay: 0;
+
+        .version {
+            position: absolute;
+            bottom: 1em;
+            right: 0;
+        }
     }
 
     &.close .content {

@@ -3,10 +3,13 @@ import Router from '@koa/router';
 import Koa from 'koa';
 
 import { getLog } from "../services/internal/logService";
+import { getMemory } from '../services/internal/inMemoryService';
+import { BotType } from '../constants/enum/botType';
+import { quickSilverCompanionHandler } from '../features/quickSilverCompanion/quickSilverCompanion';
+import { getMastodonService } from '../services/external/mastodon/mastodonService';
 
 interface IHttpServerProps {
     authToken: string;
-    onQuicksilverPush: () => Promise<void>
 }
 
 export const setUpCustomHttpServer = (props: IHttpServerProps) => {
@@ -16,7 +19,7 @@ export const setUpCustomHttpServer = (props: IHttpServerProps) => {
     // route definitions
     const router = new Router();
     router.get('/', defaultEndpoint);
-    router.get('/qs', qsEndpoint(props.authToken, props.onQuicksilverPush));
+    router.get('/qs', qsEndpoint(props.authToken));
 
     app.use(router.routes());
 
@@ -31,10 +34,7 @@ const defaultEndpoint = async (ctx: Koa.DefaultContext, next: () => Promise<any>
     await next();
 }
 
-const qsEndpoint = (
-    authToken: string,
-    onQuicksilverPush: () => Promise<void>
-) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
+const qsEndpoint = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
     const currentAuthHeader = ctx.get('Authorization') ?? '';
     if (currentAuthHeader.localeCompare(authToken) != 0) {
         ctx.body = '<h1>Unauthorized</h1>';
@@ -42,7 +42,14 @@ const qsEndpoint = (
         return;
     }
 
-    await onQuicksilverPush();
+    const inMemoryService = getMemory();
+    const mastoService = getMastodonService();
+    const qsMeta = inMemoryService.getMastodonClient(BotType.qsCompanion);
+    if (qsMeta == null) {
+        getLog().e('Could not find mastoClient');
+        return;
+    }
+    await quickSilverCompanionHandler(qsMeta.client, mastoService);
 
     ctx.body = '<p><b>Quicksilver companion</b> handler triggered</p>';
 

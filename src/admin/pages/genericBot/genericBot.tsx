@@ -11,8 +11,9 @@ import { CenterLoading, LoadingSpinner } from '../../components/core/loading';
 import { routes } from '../../constants/route';
 import { CredentialsContext } from '../../context/credentials.context';
 import { ResponsiveCustomGrid } from '../../layout/responsiveCustomGrid';
-import { BotMessageViewer } from './botMessageViewer';
+import { BotConversationsViewer } from './botConversationsViewer';
 import { SpecificBotComponents } from './botSpecific/botSpecific';
+import { BotTootsViewer } from './botTootsViewer';
 import { SmallScreenOnlyDivider } from './commonBotComponents';
 import { GenericBotPageSendMessage } from './sendMessage';
 
@@ -67,33 +68,6 @@ export const GenericBotPage: Component = () => {
         setNetworkState(NetworkState.Success);
     }
 
-    const getLatestToots = (botmeta?: ICredentialItem) => {
-        if (botmeta == null) return;
-
-        try {
-            (window as any).loadMasto({
-                container_body_id: 'bot-timeline',
-                instance_uri: 'https://nomanssky.social',
-                user_id: botmeta.userId,
-                profile_name: botmeta.profileName,
-                toots_limit: 5,
-            });
-        } catch { }
-    }
-
-    const renderTimeLine = (botType: BotType) => {
-        return (
-            <GridItem data-key={botType} pt="1.5em" colSpan={{
-                "@initial": "4",
-                "@lg": "2",
-            }}>
-                <div id="bot-timeline" class="mt-body" style="width: 100%">
-                    <Button colorScheme="accent" width="100%" onClick={() => getLatestToots(botMeta())}>🐘 Display latest Toots!</Button>
-                </div>
-            </GridItem>
-        );
-    }
-
     return (
         <ResponsiveCustomGrid>
             <Show when={networkState() == NetworkState.Error}>
@@ -109,10 +83,6 @@ export const GenericBotPage: Component = () => {
                     <PageHeader text={botMeta()!.name}></PageHeader>
                 </GridItem>
 
-                <BotMessageViewer
-                    botMeta={botMeta()!}
-                />
-
                 <SpecificBotComponents
                     botMeta={botMeta()!}
                 />
@@ -123,7 +93,14 @@ export const GenericBotPage: Component = () => {
 
                 <SmallScreenOnlyDivider />
 
-                {renderTimeLine(botMeta()!.type)}
+                <BotTootsViewer
+                    botMeta={botMeta()!}
+                />
+
+                <BotConversationsViewer
+                    botMeta={botMeta()!}
+                />
+
                 <GridItem />
                 <Box m="3em" />
             </Show>

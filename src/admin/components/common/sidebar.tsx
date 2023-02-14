@@ -52,7 +52,7 @@ export const Sidebar: Component = () => {
         >
             <>
                 <Box class="content" opacity={isHidden() ? '0' : '1'}>
-                    <Box ml="-2em">
+                    <Box ml="-2em" position="relative">
                         <Link href={routes.home}>
                             <Flex>
                                 <Image src="/assets/img/logox100.png" alt="logo" width="25%" />
@@ -64,6 +64,7 @@ export const Sidebar: Component = () => {
                             <Box m={20} />
                             <Divider />
                         </Link>
+                        <Text class='version'>{adminVersion.name}</Text>
                     </Box>
                     <Box m={20} />
                     <SidebarTitle>Quick links</SidebarTitle>
@@ -90,8 +91,6 @@ export const Sidebar: Component = () => {
                         }</For>
                     </VStack>
                 </Box>
-                <Spacer />
-                <Text>{adminVersion.name}</Text>
                 <IconButton
                     colorScheme="primary"
                     aria-label="Close drawer"

@@ -1,0 +1,17 @@
+version: '3'
+services:
+  nomansskysocial:
+    image: registry.local.khaoznet.xyz/nms-social-npc-bots
+    # image: registry.assistantapps.com/nms-social-npc-bots # in future
+    container_name: NoMansSkySocial
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik-proxy
+    environment:
+      - TZ=${TIMEZONE}
+
+networks:
+  traefik-proxy:
+    external: true

@@ -7,3 +7,29 @@
         border-radius: 1em;
     }
 }
+
+.conversations {
+    .convo {
+        width: 100%;
+        padding: 0.5em;
+        margin: 0.5em;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+
+        .content {
+            max-height: 50px;
+            overflow: hidden;
+
+            img.emoji {
+                display: inline-block;
+                max-height: 20px;
+                max-width: 20px;
+                margin-bottom: -5px;
+            }
+
+            .invisible {
+                display: none;
+            }
+        }
+    }
+}
