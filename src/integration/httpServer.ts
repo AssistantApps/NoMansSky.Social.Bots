@@ -20,7 +20,7 @@ export const setUpCustomHttpServer = (props: IHttpServerProps) => {
     // route definitions
     const router = new Router();
     router.get('/', defaultEndpoint);
-    router.get('/qs', qsEndpoint(props.authToken));
+    router.post('/qs', qsEndpoint(props.authToken));
 
     app.use(router.routes());
 

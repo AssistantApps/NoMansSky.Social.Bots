@@ -10,7 +10,8 @@ import { CenterLoading } from './components/core/loading';
 import { routes } from './constants/route';
 import { tauriFile } from "./constants/tauri";
 import { CredentialsContext } from './context/credentials.context';
-import { loadTauriResource } from "./helper/tauriHelper";
+import { decrypt } from "./helper/encryptHelper";
+import { callTauri, loadTauriResource } from "./helper/tauriHelper";
 import { RedirectToHome } from "./pages/home";
 
 const HomePage = lazy(() => import("./pages/home"));
@@ -30,8 +31,13 @@ export const AppShell: Component = () => {
     const loadAndCompareVersions = async () => {
         let localCreds: ICredential | null = null;
         try {
+            const secretKey = await callTauri('get_enc_key', '');
             const resourceString = await loadTauriResource(tauriFile.config);
-            localCreds = JSON.parse(resourceString);
+            const decrypted = decrypt(secretKey, resourceString);
+            localCreds = JSON.parse(decrypted);
+
+            // const credStr = JSON.stringify(localCreds);
+            // getLog().i(encrypt(secretKey, credStr));
         } catch (err) {
             getLog().e(err);
             setNetworkState(NetworkState.Error);

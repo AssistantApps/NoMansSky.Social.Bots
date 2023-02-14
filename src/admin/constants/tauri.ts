@@ -1,3 +1,3 @@
 export const tauriFile = {
-    config: './_up_/src/assets/data/credentials.json',
+    config: './_up_/src/assets/data/credentials.enc.json',
 }
