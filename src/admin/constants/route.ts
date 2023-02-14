@@ -2,7 +2,8 @@ const genericBotParam = ':id';
 
 export const routes = {
     home: '/',
-    home2: '/home',
+    actualHome: '/home',
+    announcements: '/announcements',
 
     genericBotParam,
     genericBot: '/bot',

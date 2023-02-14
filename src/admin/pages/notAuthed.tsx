@@ -26,7 +26,7 @@ export const NotAuthedPage: Component<IProps> = (props: IProps) => {
             <PageHeader text="Not authorized"></PageHeader>
 
             <Box m={20}></Box>
-            <Textarea minH="70vh" onInput={(event) => setCredsString((event as any)?.target?.value ?? '')}></Textarea>
+            <Textarea minH="50vh" onInput={(event) => setCredsString((event as any)?.target?.value ?? '')}></Textarea>
             <Box m={20}></Box>
 
             <Center>

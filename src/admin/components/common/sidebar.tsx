@@ -46,13 +46,13 @@ export const Sidebar: Component = () => {
             display="flex"
             direction="column"
             flexShrink="0"
-            width={isHidden() ? '0' : '$60'}
+            width={isHidden() ? '$10' : '$72'}
             height="100vh"
             p={isHidden() ? '0' : '$6'}
         >
             <>
                 <Box class="content" opacity={isHidden() ? '0' : '1'}>
-                    <Box ml="-2em" position="relative">
+                    <Box position="relative">
                         <Link href={routes.home}>
                             <Flex>
                                 <Image src="/assets/img/logox100.png" alt="logo" width="25%" />
@@ -69,7 +69,8 @@ export const Sidebar: Component = () => {
                     <Box m={20} />
                     <SidebarTitle>Quick links</SidebarTitle>
                     <VStack alignItems="flex-start" spacing="$1" mb="$6">
-                        <SidebarNavLink href={routes.home2}>Home</SidebarNavLink>
+                        <SidebarNavLink href={routes.actualHome}>Home</SidebarNavLink>
+                        <SidebarNavLink href={routes.announcements}>Announcements</SidebarNavLink>
                     </VStack>
                     <Box m={20} />
                     <SidebarTitle>Bot links</SidebarTitle>

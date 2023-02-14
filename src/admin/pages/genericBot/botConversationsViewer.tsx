@@ -58,25 +58,27 @@ export const BotConversationsViewer: Component<IProps> = (props: IProps) => {
                             </Center>
                         </Show>
                         <Show when={networkState() == NetworkState.Success}>
-                            <VStack class="conversations" justifyContent="flex-start" alignItems="flex-start">
-                                <For each={convos()}>{
-                                    (convo) => {
-                                        let innerHtml = convo.last_status.content;
-                                        for (const emojiObj of convo.last_status.emojis) {
-                                            innerHtml = innerHtml.replaceAll(`:${emojiObj.shortcode}:`, `<img src="${emojiObj.static_url}" class="emoji" alt="${emojiObj.shortcode}" />`)
-                                        }
+                            <Show when={convos().length > 0} fallback={<Center>No Items</Center>}>
+                                <VStack class="conversations" justifyContent="flex-start" alignItems="flex-start">
+                                    <For each={convos()}>{
+                                        (convo) => {
+                                            let innerHtml = convo.last_status.content;
+                                            for (const emojiObj of convo.last_status.emojis) {
+                                                innerHtml = innerHtml.replaceAll(`:${emojiObj.shortcode}:`, `<img src="${emojiObj.static_url}" class="emoji" alt="${emojiObj.shortcode}" />`)
+                                            }
 
-                                        return (
-                                            <HStack class="convo">
-                                                <Avatar src={convo.last_status.account.avatar} />
-                                                <Box class="content" ml={10} flexGrow={4}>
-                                                    <div innerHTML={innerHtml} />
-                                                </Box>
-                                            </HStack>
-                                        );
-                                    }
-                                }</For>
-                            </VStack>
+                                            return (
+                                                <HStack class="convo">
+                                                    <Avatar src={convo.last_status.account.avatar} />
+                                                    <Box class="content limit-height" ml={10} flexGrow={4}>
+                                                        <div innerHTML={innerHtml} />
+                                                    </Box>
+                                                </HStack>
+                                            );
+                                        }
+                                    }</For>
+                                </VStack>
+                            </Show>
                         </Show>
                     </ModalBody>
                     <ModalFooter>

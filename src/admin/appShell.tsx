@@ -11,9 +11,11 @@ import { routes } from './constants/route';
 import { tauriFile } from "./constants/tauri";
 import { CredentialsContext } from './context/credentials.context';
 import { loadTauriResource } from "./helper/tauriHelper";
+import { RedirectToHome } from "./pages/home";
 
 const HomePage = lazy(() => import("./pages/home"));
 const GenericBot = lazy(() => import("./pages/genericBot/genericBot"));
+const AnnouncementsPage = lazy(() => import("./pages/announcements"));
 const AboutPage = lazy(() => import("./pages/about"));
 const NotAuthedPage = lazy(() => import("./pages/notAuthed"));
 
@@ -66,7 +68,7 @@ export const AppShell: Component = () => {
     }
 
     return (
-        <Box px="3em">
+        <Box>
             <Show when={networkState() == NetworkState.Error}>
                 <NotAuthedPage setCredentials={(newCreds) => {
                     setCredentials(newCreds);
@@ -78,16 +80,18 @@ export const AppShell: Component = () => {
             </Show>
             <Show when={networkState() == NetworkState.Success}>
                 <CredentialsContext.Provider value={credentials()}>
-                    <Flex>
+                    <Flex maxH="100vh">
                         <Sidebar />
-                        <hope.main w="$full" pl="3em">
+                        <hope.main w="$full" px="3em" overflowY="scroll">
                             <Suspense fallback={<CenterLoading />} >
                                 <Routes>
-                                    <Route path={routes.home} component={HomePage} />
-                                    <Route path={routes.home2} component={HomePage} />
+                                    <Route path={routes.actualHome} component={HomePage} />
                                     <Route path={routes.genericBot} component={GenericBot} />
                                     <Route path={routes.genericBotWithId} component={GenericBot} />
+                                    <Route path={routes.announcements} component={AnnouncementsPage} />
                                     <Route path={routes.about} component={AboutPage} />
+
+                                    <Route path={"*"} element={<RedirectToHome />} />
                                 </Routes>
 
                                 {/* <Footer /> */}

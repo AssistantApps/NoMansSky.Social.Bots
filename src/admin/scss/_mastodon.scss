@@ -17,8 +17,10 @@
         border-radius: 10px;
 
         .content {
-            max-height: 50px;
-            overflow: hidden;
+            &.limit-height {
+                max-height: 50px;
+                overflow: hidden;
+            }
 
             img.emoji {
                 display: inline-block;
