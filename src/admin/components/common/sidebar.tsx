@@ -1,5 +1,7 @@
 import { ElementType, Flex, Text, TextProps, VStack, Image, Box, IconButton, Heading, Center, Spacer, Divider } from "@hope-ui/solid";
 import { Component, createSignal, For, useContext } from "solid-js";
+
+import adminVersion from '../../../assets/data/admin-version.json';
 import { SidebarNavLink } from "./sidebarNavLink";
 import { routes } from "../../constants/route";
 import { Link } from "@solidjs/router";
@@ -88,6 +90,8 @@ export const Sidebar: Component = () => {
                         }</For>
                     </VStack>
                 </Box>
+                <Spacer />
+                <Text>{adminVersion.name}</Text>
                 <IconButton
                     colorScheme="primary"
                     aria-label="Close drawer"

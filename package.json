@@ -15,7 +15,7 @@
     "admin": "vite",
     "admin:encrypt": "npx ts-node -p ./tsconfig.server.json ./src/encrypt.ts",
     "admin:dev": "vite",
-    "admin:build": "vite build",
+    "admin:build": "rimraf ./dist && vite build",
     "admin:serve": "vite preview",
     "admin:tauri": "tauri dev",
     "admin:tauri-prod": "rimraf ./build && start:encrypt && tauri build"
@@ -39,8 +39,8 @@
     "koa": "^2.14.1",
     "mastodon-api": "^1.3.0",
     "reflect-metadata": "^0.1.13",
-    "typedi": "^0.10.0",
-    "vite-plugin-dts": "^1.7.2"
+    "sweetalert2": "^11.7.1",
+    "typedi": "^0.10.0"
   },
   "devDependencies": {
     "@hope-ui/solid": "^0.6.7",
