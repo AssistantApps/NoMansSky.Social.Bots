@@ -8,6 +8,7 @@ export interface IMastodonService {
 
     sendBasicToot(mastoClient: MastodonClientMeta, message: string, id: string | null): Promise<any>;
     sendToot(mastoClient: MastodonClientMeta, params: MastodonMakeToot): Promise<any>;
+
     uploadTootMedia(mastoClient: MastodonClientMeta, file: fs.ReadStream): Promise<string>;
     sendTootWithMedia(mastoClient: MastodonClientMeta, file: fs.ReadStream, params: MastodonMakeToot): Promise<any>;
 }

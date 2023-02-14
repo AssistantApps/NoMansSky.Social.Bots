@@ -11,6 +11,7 @@ import { CenterLoading, LoadingSpinner } from '../../components/core/loading';
 import { routes } from '../../constants/route';
 import { CredentialsContext } from '../../context/credentials.context';
 import { ResponsiveCustomGrid } from '../../layout/responsiveCustomGrid';
+import { BotMessageViewer } from './botMessageViewer';
 import { SpecificBotComponents } from './botSpecific/botSpecific';
 import { SmallScreenOnlyDivider } from './commonBotComponents';
 import { GenericBotPageSendMessage } from './sendMessage';
@@ -107,6 +108,10 @@ export const GenericBotPage: Component = () => {
                 <GridItem colSpan={4}>
                     <PageHeader text={botMeta()!.name}></PageHeader>
                 </GridItem>
+
+                <BotMessageViewer
+                    botMeta={botMeta()!}
+                />
 
                 <SpecificBotComponents
                     botMeta={botMeta()!}

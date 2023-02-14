@@ -1,34 +1,11 @@
+import { Emoji, MastodonAccount } from "./mastodonAccount";
+
 export interface MastodonMessageEventData {
     id: string;
     type: string;
     created_at: Date;
-    account: Account;
+    account: MastodonAccount;
     status: Status;
-}
-
-export interface Account {
-    id: string;
-    username: string;
-    acct: string;
-    display_name: string;
-    locked: boolean;
-    bot: boolean;
-    discoverable: boolean;
-    group: boolean;
-    created_at: Date;
-    note: string;
-    url: string;
-    avatar: string;
-    avatar_static: string;
-    header: string;
-    header_static: string;
-    followers_count: number;
-    following_count: number;
-    statuses_count: number;
-    last_status_at: Date;
-    noindex: boolean;
-    emojis: any[];
-    fields: any[];
 }
 
 export interface Status {
@@ -58,7 +35,7 @@ export interface Status {
     media_attachments: any[];
     mentions: any[];
     tags: any[];
-    emojis: any[];
+    emojis: Emoji[];
     card: null;
     poll: null;
 }

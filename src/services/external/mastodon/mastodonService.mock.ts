@@ -32,7 +32,6 @@ export class MockMastodonService implements IMastodonService {
         }));
     }
 
-
     uploadTootMedia = async (mastoClient: MastodonClientMeta, file: fs.ReadStream): Promise<string> => {
         return 'thisIsAnId';
     }

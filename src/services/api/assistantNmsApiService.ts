@@ -12,12 +12,12 @@ export class AssistantNmsApiService extends BaseApiService {
         super(config.getAssistantNMSUrl());
     }
 
-    async getCommunityMission(): Promise<ResultWithValue<CommunityMissionViewModel>> {
-        return await this.get<CommunityMissionViewModel>('HelloGames/CommunityMission/');
+    getCommunityMission(): Promise<ResultWithValue<CommunityMissionViewModel>> {
+        return this.get<CommunityMissionViewModel>('HelloGames/CommunityMission/');
     }
 
-    async getGameItemInfo(appId: string, lang: string = 'en'): Promise<ResultWithValue<ItemDetailsViewModel>> {
-        return await this.get<ItemDetailsViewModel>(`ItemInfo/${appId}/${lang}`);
+    getGameItemInfo(appId: string, lang: string = 'en'): Promise<ResultWithValue<ItemDetailsViewModel>> {
+        return this.get<ItemDetailsViewModel>(`ItemInfo/${appId}/${lang}`);
     }
 }
 

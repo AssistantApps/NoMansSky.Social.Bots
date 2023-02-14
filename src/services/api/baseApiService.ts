@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { createWriteStream } from 'fs';
 
 import { ResultWithValue } from '../../contracts/resultWithValue';
 import { anyObject } from '../../helper/typescriptHacks';
@@ -9,9 +8,14 @@ export class BaseApiService {
   constructor(newBaseUrl?: String) {
     if (newBaseUrl != null) this._baseUrl = newBaseUrl;
   }
-  protected async get<T>(url: string): Promise<ResultWithValue<T>> {
+  protected async get<T>(url: string, manipulateHeaders?: () => any): Promise<ResultWithValue<T>> {
+    let options = anyObject;
+    if (manipulateHeaders != null) {
+      options = { ...options, ...manipulateHeaders() };
+    }
+    // console.log({ options });
     try {
-      const result = await axios.get<T>(`${this._baseUrl}/${url}`);
+      const result = await axios.get<T>(`${this._baseUrl}/${url}`, options);
       return {
         isSuccess: true,
         value: result.data,

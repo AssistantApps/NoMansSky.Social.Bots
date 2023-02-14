@@ -44,7 +44,6 @@ export class MastodonService implements IMastodonService {
         });
     }
 
-
     uploadTootMedia = async (mastoClient: MastodonClientMeta, file: fs.ReadStream): Promise<string> => {
         const resp = await mastoClient.client.post('media', { file });
         return resp.data.id;

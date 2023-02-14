@@ -1,8 +1,6 @@
 
-import { Button, Center, Divider, FormControl, Image, FormLabel, GridItem, HStack, Input, VStack, Box, Heading, List, UnorderedList, ListItem } from '@hope-ui/solid';
-import { useNavigate, useParams } from '@solidjs/router';
-import { Component, createEffect, createSignal, For, onMount, Show, useContext } from 'solid-js';
-import { BotType } from '../../../../constants/enum/botType';
+import { Center, GridItem, Heading, ListItem, UnorderedList } from '@hope-ui/solid';
+import { Component, createSignal, For, onMount, Show } from 'solid-js';
 import { NetworkState } from '../../../../constants/enum/networkState';
 import { ExternalUrls } from '../../../../constants/externalUrls';
 import { ICredentialItem } from '../../../../contracts/credential';
