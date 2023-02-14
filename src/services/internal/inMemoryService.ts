@@ -16,7 +16,8 @@ export class InMemoryService {
             return;
         }
 
-        this._clients[clientIndex] = manipulate(this._clients[clientIndex]);
+        const newClient = manipulate(this._clients[clientIndex]);
+        this._clients[clientIndex] = newClient;
     }
 
     getAllMastodonClients = (): Array<MastodonClientMeta> => this._clients;

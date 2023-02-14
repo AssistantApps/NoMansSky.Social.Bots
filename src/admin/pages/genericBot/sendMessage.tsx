@@ -1,16 +1,8 @@
 
-import { Button, Center, Divider, FormControl, Image, FormLabel, GridItem, HStack, Input, VStack, Box } from '@hope-ui/solid';
-import { useNavigate, useParams } from '@solidjs/router';
-import { Component, createEffect, createSignal, onMount, Show, useContext } from 'solid-js';
-import { BotType } from '../../../constants/enum/botType';
+import { Box, Button, FormControl, FormLabel, GridItem, HStack, Image, Input, VStack } from '@hope-ui/solid';
+import { Component, createSignal } from 'solid-js';
 import { NetworkState } from '../../../constants/enum/networkState';
 import { ICredentialItem } from '../../../contracts/credential';
-import { getLog } from '../../../services/internal/logService';
-import { PageHeader } from '../../components/common/pageHeader';
-import { CenterLoading, LoadingSpinner } from '../../components/core/loading';
-import { routes } from '../../constants/route';
-import { CredentialsContext } from '../../context/credentials.context';
-import { ResponsiveCustomGrid } from '../../layout/responsiveCustomGrid';
 
 interface IProps {
     botMeta: ICredentialItem;
@@ -40,7 +32,7 @@ export const GenericBotPageSendMessage: Component<IProps> = (props: IProps) => {
                 </HStack>
                 <HStack justifyContent="flex-end">
                     <Button type="submit">
-                        Submit
+                        Submit (Not working yet)
                     </Button>
                 </HStack>
             </VStack>

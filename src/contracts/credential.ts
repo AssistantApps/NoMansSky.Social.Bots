@@ -1,6 +1,7 @@
 import { BotType } from "../constants/enum/botType";
 
 export interface ICredential {
+    apiUrl: string;
     apiAuthToken: string;
     accounts: Array<ICredentialItem>;
 }

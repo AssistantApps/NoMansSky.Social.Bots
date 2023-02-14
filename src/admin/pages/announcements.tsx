@@ -56,7 +56,7 @@ export const AnnouncementsPage: Component = () => {
                     <PageHeader text="Announcements"></PageHeader>
                 </GridItem>
                 <GridItem colSpan={4}>
-                    <Show when={announcements().length > 0} fallback={<Center>No Items</Center>}>
+                    <Show when={announcements().length > 0} fallback={<Center minH="25vh">No Items</Center>}>
                         <VStack class="conversations" justifyContent="flex-start" alignItems="flex-start">
                             <For each={announcements()}>{
                                 (announcement) => {

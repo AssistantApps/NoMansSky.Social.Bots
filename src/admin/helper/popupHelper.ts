@@ -39,6 +39,18 @@ export const CopyPopup = async (props: ICopyPopupProps): Promise<any> => {
     }
 }
 
+export interface IErrorPopupProps {
+    title: string;
+}
+export const errorPopup = async (props: IErrorPopupProps): Promise<any> => {
+
+    await Swal.fire({
+        icon: 'error',
+        title: props.title,
+        showCancelButton: true,
+    });
+}
+
 // export interface IStringInputPopupProps {
 //     title: string;
 //     input: SweetAlertInput | undefined;

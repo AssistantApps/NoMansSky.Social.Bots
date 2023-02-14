@@ -85,10 +85,14 @@ export const quickSilverCompanionHandler = async (
 
     const params: MastodonMakeToot = {
         status: messageToSend,
-        in_reply_to_id: replyToId,
         visibility: visibility,
         scheduled_at: scheduledDate.toISOString(),
     }
+
+    if (replyToId != null) {
+        params.in_reply_to_id = replyToId;
+    }
+
     // const mediaIdCache = getTempFile('qsCompanion-', 'json');
     // try {
     //     const mediaIdCacheContent: any = readFileSync(mediaIdCache);

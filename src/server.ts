@@ -41,7 +41,14 @@ const main = async () => {
         const listener: any = mastoClient.client.stream('streaming/user');
         listener.on('error', onErrorHandler(mastoClient.name, mastoClient.type));
         listener.on('message', onMessageHandler(mastoClient.name, mastoClient.type));
-        mastoClient.listener = listener;
+
+        inMemoryService.setMastodonClient(mastoClient.type, (existing) => {
+            return {
+                ...existing,
+                client: mastoService.createClient(existing as any),
+                listener,
+            }
+        });
     }
 
     getLog().i("Setup complete...");

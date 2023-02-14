@@ -7,6 +7,7 @@ import { getMemory } from '../services/internal/inMemoryService';
 import { BotType } from '../constants/enum/botType';
 import { quickSilverCompanionHandler } from '../features/quickSilverCompanion/quickSilverCompanion';
 import { getMastodonService } from '../services/external/mastodon/mastodonService';
+import { getConfig } from '../services/internal/configService';
 
 interface IHttpServerProps {
     authToken: string;
@@ -23,9 +24,9 @@ export const setUpCustomHttpServer = (props: IHttpServerProps) => {
 
     app.use(router.routes());
 
-    getLog().i("HTTP setup complete...");
-
-    app.listen(3000);
+    const port = getConfig().getApiPort();
+    app.listen(port);
+    getLog().i(`HTTP setup complete. Available at http://localhost:${port}`);
 }
 
 const defaultEndpoint = async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
@@ -49,7 +50,8 @@ const qsEndpoint = (authToken: string) => async (ctx: Koa.DefaultContext, next: 
         getLog().e('Could not find mastoClient');
         return;
     }
-    await quickSilverCompanionHandler(qsMeta.client, mastoService);
+
+    await quickSilverCompanionHandler(qsMeta, mastoService);
 
     ctx.body = '<p><b>Quicksilver companion</b> handler triggered</p>';
 
