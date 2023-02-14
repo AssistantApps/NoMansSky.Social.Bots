@@ -1,1 +1,0 @@
-import{c as e,H as r,F as n}from"./index-3134f122.js";const i=t=>e(n,{class:"page-title",direction:"row",justifyContent:"center",paddingTop:"2em",mb:"1em",get children(){return e(r,{size:"3xl",get children(){return t.text}})}});export{i as P};
