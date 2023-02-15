@@ -1,4 +1,4 @@
-$version = '0.18'
+$version = '0.19'
 
 
 docker build -t nms-social-npc-bots -f Dockerfile .

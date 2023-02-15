@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import Router from '@koa/router';
+import cors from '@koa/cors';
 import Koa from 'koa';
 
 import { getLog } from "../services/internal/logService";
@@ -23,6 +24,7 @@ export const setUpCustomHttpServer = (props: IHttpServerProps) => {
     router.post('/qs', qsEndpoint(props.authToken));
 
     app.use(router.routes());
+    app.use(cors());
 
     const port = getConfig().getApiPort();
     app.listen(port);
