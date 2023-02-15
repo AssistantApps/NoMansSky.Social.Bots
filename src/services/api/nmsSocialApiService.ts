@@ -9,8 +9,12 @@ export class NmsSocialApiService extends BaseApiService {
         super('https://api.nomanssky.social');
     }
 
-    triggerQuicksilverMerchant(): Promise<Result> {
-        return this.post('qs', {});
+    triggerQuicksilverMerchant(apiAuthToken: string): Promise<Result> {
+        return this.post('qs', {}, () => ({
+            headers: {
+                'Authorization': apiAuthToken,
+            }
+        }));
     }
 }
 

@@ -1,13 +1,13 @@
 
-import { Button, Center, Divider, FormControl, Image, FormLabel, GridItem, HStack, Input, VStack, Box } from '@hope-ui/solid';
+import { Box, Center, GridItem } from '@hope-ui/solid';
 import { useNavigate, useParams } from '@solidjs/router';
-import { Component, createEffect, createSignal, onMount, Show, useContext } from 'solid-js';
+import { Component, createEffect, createSignal, Show, useContext } from 'solid-js';
 import { BotType } from '../../../constants/enum/botType';
 import { NetworkState } from '../../../constants/enum/networkState';
 import { ICredentialItem } from '../../../contracts/credential';
 import { getLog } from '../../../services/internal/logService';
 import { PageHeader } from '../../components/common/pageHeader';
-import { CenterLoading, LoadingSpinner } from '../../components/core/loading';
+import { CenterLoading } from '../../components/core/loading';
 import { routes } from '../../constants/route';
 import { CredentialsContext } from '../../context/credentials.context';
 import { ResponsiveCustomGrid } from '../../layout/responsiveCustomGrid';

@@ -1,20 +1,23 @@
 
 import { Button, GridItem } from '@hope-ui/solid';
-import { Component, createSignal } from 'solid-js';
+import { Component, createSignal, useContext } from 'solid-js';
 
 import { NetworkState } from '../../../../constants/enum/networkState';
 import { getNmsSocialApi } from '../../../../services/api/nmsSocialApiService';
 import { getLog } from '../../../../services/internal/logService';
+import { CredentialsContext } from '../../../context/credentials.context';
 import { errorPopup } from '../../../helper/popupHelper';
 
 
 export const QSCompanionSpecific: Component = () => {
+    const creds = useContext(CredentialsContext);
     const [networkState, setNetworkState] = createSignal(NetworkState.Pending);
 
     const triggerQuicksilverMission = async () => {
 
         const nmsSocialApi = getNmsSocialApi();
-        const dialogsResult = await nmsSocialApi.triggerQuicksilverMerchant()
+        const apiAuthToken = creds?.apiAuthToken ?? '';
+        const dialogsResult = await nmsSocialApi.triggerQuicksilverMerchant(apiAuthToken)
         if (dialogsResult.isSuccess == false) {
             const title = 'Could not trigger QS merchant message post';
             getLog().e(title, dialogsResult.errorMessage);
