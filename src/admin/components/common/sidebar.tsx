@@ -1,13 +1,13 @@
-import { ElementType, Flex, Text, TextProps, VStack, Image, Box, IconButton, Heading, Center, Spacer, Divider } from "@hope-ui/solid";
+import { Box, Center, Divider, ElementType, Flex, Heading, IconButton, Image, Text, TextProps, VStack } from "@hope-ui/solid";
 import { Component, createSignal, For, useContext } from "solid-js";
 
-import adminVersion from '../../../assets/data/admin-version.json';
-import { SidebarNavLink } from "./sidebarNavLink";
-import { routes } from "../../constants/route";
 import { Link } from "@solidjs/router";
-import { CredentialsContext } from "../../context/credentials.context";
-import { allBotTypes } from "../../../constants/enum/botType";
+import adminVersion from '../../../assets/data/admin-version.json';
+import { sidebarBotTypes } from "../../../constants/enum/botType";
 import { getLog } from "../../../services/internal/logService";
+import { routes } from "../../constants/route";
+import { CredentialsContext } from "../../context/credentials.context";
+import { SidebarNavLink } from "./sidebarNavLink";
 
 export const Sidebar: Component = () => {
     const creds = useContext(CredentialsContext);
@@ -41,7 +41,7 @@ export const Sidebar: Component = () => {
     return (
         <Flex
             as="nav"
-            class={isHidden() ? 'hide-scrollbar expand' : 'hide-scrollbar close'}
+            class={isHidden() ? 'hide-scrollbar noselect expand' : 'hide-scrollbar noselect close'}
             position="sticky"
             display="flex"
             direction="column"
@@ -71,11 +71,13 @@ export const Sidebar: Component = () => {
                     <VStack alignItems="flex-start" spacing="$1" mb="$6">
                         <SidebarNavLink href={routes.actualHome}>Home</SidebarNavLink>
                         <SidebarNavLink href={routes.announcements}>Announcements</SidebarNavLink>
+                        <SidebarNavLink href={routes.domainBlocks}>Domain Blocks</SidebarNavLink>
+                        <SidebarNavLink href={routes.util}>Utilities</SidebarNavLink>
                     </VStack>
                     <Box m={20} />
                     <SidebarTitle>Bot links</SidebarTitle>
                     <VStack alignItems="flex-start" spacing="$1" mb="$6">
-                        <For each={allBotTypes()}>{
+                        <For each={sidebarBotTypes()}>{
                             (botProp) => {
                                 const botCredsIndex = (creds?.accounts ?? []).findIndex(acc => acc.type === botProp);
                                 if (botCredsIndex < 0) {

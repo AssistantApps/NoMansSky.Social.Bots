@@ -1,4 +1,5 @@
 import Swal from "sweetalert2";
+import { copyTextToClipboard } from "./browserHelper";
 
 export interface IConfirmationPopupProps {
     title: string;
@@ -35,7 +36,7 @@ export const CopyPopup = async (props: ICopyPopupProps): Promise<any> => {
     const { isConfirmed } = await firstSwalPromise;
 
     if (isConfirmed) {
-        navigator?.clipboard?.writeText?.(props.textToCopy);
+        copyTextToClipboard(props.textToCopy);
     }
 }
 

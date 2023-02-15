@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Center, createDisclosure, GridItem, HStack, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, UnorderedList, VStack } from "@hope-ui/solid";
+import { Avatar, Box, Button, Center, createDisclosure, GridItem, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, VStack } from "@hope-ui/solid";
 import { Component, createSignal, For, Show } from 'solid-js';
 
 import { NetworkState } from '../../../constants/enum/networkState';
@@ -6,7 +6,7 @@ import { ICredentialItem } from '../../../contracts/credential';
 import { MastodonConversation } from "../../../contracts/mastodonConversation";
 import { getMastodonApi } from '../../../services/api/mastodonApiService';
 import { getLog } from "../../../services/internal/logService";
-import { CenterLoading, LoadingSpinner } from "../../components/core/loading";
+import { LoadingSpinner } from "../../components/core/loading";
 
 interface IProps {
     botMeta: ICredentialItem;

@@ -9,7 +9,7 @@ export const PageHeader: Component<IProps> = (props: IProps) => {
 
     return (
         <Flex
-            class="page-title"
+            class="page-title noselect"
             direction="row"
             justifyContent="center"
             paddingTop="2em"

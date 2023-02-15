@@ -6,10 +6,9 @@ export const SmallScreenOnlyDivider: Component = () => {
     return (
         <GridItem pt="1.5em" colSpan={{
             "@initial": "4",
-            "@lg": "2",
+            "@xl": "4",
         }} display={{
             "@initial": "unset",
-            "@lg": "none",
         }}>
             <Divider />
         </GridItem>

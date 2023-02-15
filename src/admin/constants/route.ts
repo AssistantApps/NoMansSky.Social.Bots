@@ -4,6 +4,8 @@ export const routes = {
     home: '/',
     actualHome: '/home',
     announcements: '/announcements',
+    domainBlocks: '/domainBlocks',
+    util: '/util',
 
     genericBotParam,
     genericBot: '/bot',

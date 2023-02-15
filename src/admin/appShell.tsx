@@ -1,4 +1,4 @@
-import { Box, Flex, hope } from "@hope-ui/solid";
+import { Box, Center, Flex, hope } from "@hope-ui/solid";
 import { Route, Routes } from "@solidjs/router";
 import { Component, createSignal, lazy, onMount, Show, Suspense } from 'solid-js';
 
@@ -6,9 +6,9 @@ import { NetworkState } from "../constants/enum/networkState";
 import { ICredential } from "../contracts/credential";
 import { getLog } from "../services/internal/logService";
 import { Sidebar } from './components/common/sidebar';
-import { CenterLoading } from './components/core/loading';
+import { CenterLoading, LoadingSpinner } from './components/core/loading';
 import { routes } from './constants/route';
-import { tauriFile } from "./constants/tauri";
+import { tauriFile, tauriMethod } from "./constants/tauri";
 import { CredentialsContext } from './context/credentials.context';
 import { decrypt } from "./helper/encryptHelper";
 import { callTauri, loadTauriResource } from "./helper/tauriHelper";
@@ -17,6 +17,8 @@ import { RedirectToHome } from "./pages/home";
 const HomePage = lazy(() => import("./pages/home"));
 const GenericBot = lazy(() => import("./pages/genericBot/genericBot"));
 const AnnouncementsPage = lazy(() => import("./pages/announcements"));
+const DomainBlocksPage = lazy(() => import("./pages/domainBlocks"));
+const UtilPage = lazy(() => import("./pages/util"));
 const AboutPage = lazy(() => import("./pages/about"));
 const NotAuthedPage = lazy(() => import("./pages/notAuthed"));
 
@@ -31,7 +33,7 @@ export const AppShell: Component = () => {
     const loadAndCompareVersions = async () => {
         let localCreds: ICredential | null = null;
         try {
-            const secretKey = await callTauri('get_enc_key', '');
+            const secretKey = await callTauri(tauriMethod.encryptKey, '');
             const resourceString = await loadTauriResource(tauriFile.config);
             const decrypted = decrypt(secretKey, resourceString);
             localCreds = JSON.parse(decrypted);
@@ -88,13 +90,15 @@ export const AppShell: Component = () => {
                 <CredentialsContext.Provider value={credentials()}>
                     <Flex maxH="100vh">
                         <Sidebar />
-                        <hope.main w="$full" px="3em" overflowY="scroll">
-                            <Suspense fallback={<CenterLoading />} >
+                        <hope.main w="$full" px="3em" overflowY="auto">
+                            <Suspense fallback={<Center width="100%" height="100vh">            <LoadingSpinner />        </Center>} >
                                 <Routes>
                                     <Route path={routes.actualHome} component={HomePage} />
                                     <Route path={routes.genericBot} component={GenericBot} />
                                     <Route path={routes.genericBotWithId} component={GenericBot} />
                                     <Route path={routes.announcements} component={AnnouncementsPage} />
+                                    <Route path={routes.domainBlocks} component={DomainBlocksPage} />
+                                    <Route path={routes.util} component={UtilPage} />
                                     <Route path={routes.about} component={AboutPage} />
 
                                     <Route path={"*"} element={<RedirectToHome />} />
