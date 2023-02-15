@@ -49,7 +49,7 @@ export const quickSilverCompanionHandler = async (
     if (username != null) {
         messageToSend += ` @${username}. `;
     } else {
-        messageToSend += `! `;
+        messageToSend += `s! `;
     }
     messageToSend += `\nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
 
