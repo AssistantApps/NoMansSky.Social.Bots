@@ -7,9 +7,9 @@
   "licence": "MIT",
   "scripts": {
     "build": "rimraf ./build && tsc -p ./tsconfig.server.json",
-    "copy-assets": "copyfiles -u 2 ./src/assets/**/* ./build/assets",
-    "copy-env": "copyfiles ./.env ./build/",
-    "start": "npm run build && node build/server.js",
+    "copy-assets": "copyfiles -u 2 ./src/assets/**/* ./build/src/assets",
+    "copy-env": "copyfiles ./.env ./build/src/",
+    "start": "npm run build && node build/src/server.js",
     "start:dev": "npx nodemon",
     "start:test": "npx ts-node -p ./tsconfig.server.json ./src/test.ts",
     "admin": "vite",

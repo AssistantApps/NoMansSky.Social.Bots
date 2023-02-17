@@ -9,12 +9,12 @@ COPY src ./src
 RUN npm ci
 RUN npm run build
 RUN npm run copy-assets
-COPY ./.env ./build/.env
+COPY ./.env ./build/src/.env
 RUN npm prune --production
 
 FROM gcr.io/distroless/nodejs18-debian11
 
-COPY --from=builder /usr/src/app/build .
+COPY --from=builder /usr/src/app/build/src .
 COPY --from=builder /usr/src/app/package*.json .
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 

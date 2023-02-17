@@ -100,14 +100,14 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
+  "include": ["src/**/*"],
   "exclude": [
       "scripts",
       "public/assets",
       "dist/assets/js/mastodon.widget.js",
       "vite.config.ts"
   ],
-  "include": ["src/**/*"],
-  "files": [         // by whitelisting the files to include, TS won't automatically
-    "package.json"   // include all source below root, which is the default.
+  "files": [
+    "package.json"
   ]
 }
