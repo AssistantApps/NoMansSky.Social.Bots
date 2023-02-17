@@ -36,5 +36,8 @@
     "src/admin.tsx",
     "src/admin/**/*",
     "./vite.config.ts"
+  ],
+  "files": [         // by whitelisting the files to include, TS won't automatically
+    "package.json"   // include all source below root, which is the default.
   ]
 }

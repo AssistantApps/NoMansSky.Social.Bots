@@ -3,9 +3,10 @@ import { Container } from "typedi";
 
 import devCreds from './assets/data/credentials.dev.json';
 import prodCreds from './assets/data/credentials.json';
+import { dontSetupListenersBotTypes } from './constants/enum/botType';
 import { MastodonClientMeta } from './contracts/mastoClientMeta';
-import { onErrorHandler } from './handler/errorHandler';
-import { onMessageHandler } from './handler/messageHandler';
+import { setupConnectedInterval } from './features/checkClientsAreConnected';
+import { setupListenersForClientMeta } from './helper/clientHelper';
 import { setUpCustomHttpServer } from "./integration/httpServer";
 import { getMastodonService } from "./services/external/mastodon/mastodonService";
 import { BOT_PATH, getConfig } from "./services/internal/configService";
@@ -27,6 +28,8 @@ const main = async () => {
 
     const mastoClients: Array<MastodonClientMeta> = [];
     for (const cred of credentialObj.accounts) {
+        if (dontSetupListenersBotTypes().includes(cred.type)) continue;
+
         const credAsAny: any = (cred as any);
         mastoClients.push({
             ...credAsAny,
@@ -38,17 +41,7 @@ const main = async () => {
     inMemoryService.setMastodonClients(mastoClients);
 
     for (const mastoClient of mastoClients) {
-        const listener: any = mastoClient.client.stream('streaming/user');
-        listener.on('error', onErrorHandler(mastoClient.name, mastoClient.type));
-        listener.on('message', onMessageHandler(mastoClient.name, mastoClient.type));
-
-        inMemoryService.setMastodonClient(mastoClient.type, (existing) => {
-            return {
-                ...existing,
-                client: mastoService.createClient(existing as any),
-                listener,
-            }
-        });
+        setupListenersForClientMeta(mastoClient);
     }
 
     getLog().i("Setup complete...");
@@ -56,6 +49,9 @@ const main = async () => {
     setUpCustomHttpServer({
         authToken: credentialObj.apiAuthToken,
     });
+
+    const checkClientsInterval = setupConnectedInterval();
+    getLog().i(`Setup client checker... ${checkClientsInterval.toString()}`);
 }
 
 main();

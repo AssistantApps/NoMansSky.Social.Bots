@@ -4,13 +4,19 @@ export enum BotType {
     ariadne = 'ariadne',
     theRealAriadne = 'theRealAriadne',
     qsCompanion = 'qsCompanion',
+    assistantnmstracker = 'assistantnmstracker',
 }
 
 export const allBotTypes = () => Object.keys(BotType).filter(bt => bt != BotType.unknown);
-export const sidebarBotTypes = () => allBotTypes().filter(bt => bt != BotType.admin);
+export const sidebarBotTypes = () => allBotTypes();
 
+export const dontSetupListenersBotTypes = () => [
+    BotType.unknown,
+    BotType.admin,
+    BotType.assistantnmstracker,
+].map(bt => bt.toString());
 
 export const botsThatUsRandomDialog = () => [
     BotType.ariadne,
     BotType.theRealAriadne,
-]
+];

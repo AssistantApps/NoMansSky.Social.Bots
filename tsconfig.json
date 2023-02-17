@@ -105,5 +105,9 @@
       "public/assets",
       "dist/assets/js/mastodon.widget.js",
       "vite.config.ts"
+  ],
+  "include": ["src/**/*"],
+  "files": [         // by whitelisting the files to include, TS won't automatically
+    "package.json"   // include all source below root, which is the default.
   ]
 }

@@ -1,5 +1,6 @@
 import { DataService, GameItemService, QuicksilverStore } from 'assistantapps-nomanssky-info';
 import { createReadStream } from 'fs';
+import { CommunityMissionViewModel } from '../../contracts/generated/communityMissionViewModel';
 
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
@@ -15,7 +16,7 @@ export const quickSilverCompanionMentionHandler = async (
     payload: MastodonMessageEventData,
     mastodonService: IMastodonService
 ) => {
-    quickSilverCompanionHandler(
+    quickSilverCompanionGetDataFromEndpointAndToot(
         clientMeta,
         mastodonService,
         payload.status.id,
@@ -24,7 +25,7 @@ export const quickSilverCompanionMentionHandler = async (
     );
 }
 
-export const quickSilverCompanionHandler = async (
+export const quickSilverCompanionGetDataFromEndpointAndToot = async (
     clientMeta: MastodonClientMeta,
     mastodonService: IMastodonService,
     replyToId?: string,
@@ -41,9 +42,6 @@ export const quickSilverCompanionHandler = async (
         // TODO maybe send a message to user
     }
 
-    const dataService = new DataService();
-    const qsStoreItems = await dataService.getQuicksilverStore();
-
     let compiledTemplate: string | null = null;
     let messageToSend = `Greetings traveller`;
     if (username != null) {
@@ -52,31 +50,6 @@ export const quickSilverCompanionHandler = async (
         messageToSend += `s! `;
     }
     messageToSend += `\nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
-
-    try {
-        const current = qsStoreItems.find((qs: QuicksilverStore) => qs.MissionId == cmResult.value.missionId);
-        const itemId = current?.Items?.[(cmResult.value.currentTier - 1)]?.ItemId;
-        if (itemId == null) throw 'Item not found by tier';
-
-        const gameItemService = new GameItemService();
-        const itemData = await gameItemService.getItemDetails(itemId);
-        if (itemData == null) throw 'Item not found by id';
-
-        const shareLink = `https://app.nmsassistant.com/link/en/${itemData.Id}.html`;
-        messageToSend = messageToSend + `\n\nCurrent item being researched: ${itemData.Name}.\n${shareLink}`;
-
-        const imgDestData = await getBase64FromAssistantNmsImage(itemData.Icon);
-
-        compiledTemplate = communityMissionSvgTemplate({
-            ...cmResult.value,
-            itemName: itemData.Name,
-            qsCost: itemData.BaseValueUnits,
-            itemImgData: imgDestData,
-        });
-    }
-    catch (ex) {
-        getLog().e(clientMeta.name, 'error getting community mission details', ex);
-    }
 
     if (compiledTemplate == null) {
         getLog().e(clientMeta.name, 'error getting community mission details', 'compiledTemplate == null');
@@ -91,6 +64,63 @@ export const quickSilverCompanionHandler = async (
 
     if (replyToId != null) {
         params.in_reply_to_id = replyToId;
+    }
+
+    await quickSilverCompanionToot({
+        clientMeta: clientMeta,
+        mastodonService: mastodonService,
+        communityMissionData: cmResult.value,
+        tootParams: params,
+    });
+}
+
+
+export const quickSilverCompanionToot = async (props: {
+    clientMeta: MastodonClientMeta,
+    mastodonService: IMastodonService,
+    communityMissionData: CommunityMissionViewModel,
+    tootParams: MastodonMakeToot
+}) => {
+
+    const dataService = new DataService();
+    const qsStoreItems = await dataService.getQuicksilverStore();
+
+    const { missionId, currentTier } = props.communityMissionData;
+    const current = qsStoreItems.find((qs: QuicksilverStore) => qs.MissionId == missionId);
+    const itemId = current?.Items?.[(currentTier - 1)]?.ItemId;
+    if (itemId == null) {
+        getLog().e(props.clientMeta.name, 'Item not found by tier');
+        return;
+    }
+
+    const gameItemService = new GameItemService();
+    const itemData = await gameItemService.getItemDetails(itemId);
+    if (itemData == null) {
+        getLog().e(props.clientMeta.name, 'Item not found by id');
+        return;
+    }
+
+    const shareLink = `https://app.nmsassistant.com/link/en/${itemData.Id}.html`;
+    props.tootParams.status = props.tootParams.status + `\n\nCurrent item being researched: ${itemData.Name}.\n${shareLink}`;
+
+    let compiledTemplate: string | null = null;
+    try {
+        const imgDestData = await getBase64FromAssistantNmsImage(itemData.Icon);
+
+        compiledTemplate = communityMissionSvgTemplate({
+            ...props.communityMissionData,
+            itemName: itemData.Name,
+            qsCost: itemData.BaseValueUnits,
+            itemImgData: imgDestData,
+        });
+    }
+    catch (ex) {
+        getLog().e(props.clientMeta.name, 'error getting community mission details', ex);
+    }
+
+    if (compiledTemplate == null) {
+        getLog().e(props.clientMeta.name, 'error getting community mission details', 'compiledTemplate == null');
+        return;
     }
 
     // const mediaIdCache = getTempFile('qsCompanion-', 'json');
@@ -114,20 +144,20 @@ export const quickSilverCompanionHandler = async (
             compiledTemplate,
             (outputFilePath: string) => {
                 const fileStream = createReadStream(outputFilePath);
-                mastodonService.uploadTootMedia(clientMeta, fileStream).then((mediaId) => {
+                props.mastodonService.uploadTootMedia(props.clientMeta, fileStream).then((mediaId) => {
                     // const mediaIdCacheContent = JSON.stringify([mediaId]);
                     // writeFileSync(mediaIdCache, mediaIdCacheContent);
 
-                    mastodonService.sendToot(clientMeta, {
-                        ...params,
+                    props.mastodonService.sendToot(props.clientMeta, {
+                        ...props.tootParams,
                         media_ids: [mediaId],
                     });
-                    getLog().i(clientMeta.name, 'quicksilver companion response', params);
+                    getLog().i(props.clientMeta.name, 'quicksilver companion response', props.tootParams);
                 });
             }
         );
     }
     catch (ex) {
-        getLog().e(clientMeta.name, 'error generating community mission image', ex);
+        getLog().e(props.clientMeta.name, 'error generating community mission image', ex);
     }
 }

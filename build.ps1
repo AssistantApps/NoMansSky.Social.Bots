@@ -1,7 +1,7 @@
-$version = '0.19'
+$version = '0.21'
 
 
-docker build -t nms-social-npc-bots -f Dockerfile .
+docker build --no-cache -t nms-social-npc-bots -f Dockerfile --build-arg BUILD_VERSION=$version .
 
 
 # ----------------------- Tag and push to remote -----------------------

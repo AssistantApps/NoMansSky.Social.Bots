@@ -25,7 +25,7 @@ export const CustomThemeProvider: Component<IProps> = (props: IProps) => {
 
     return (
         <HopeProvider config={config}>
-            <NotificationsProvider placement="top-end">
+            <NotificationsProvider placement="bottom-end">
                 {props.children}
             </NotificationsProvider>
         </HopeProvider>

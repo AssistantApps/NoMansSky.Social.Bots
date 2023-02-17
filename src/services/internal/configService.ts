@@ -19,6 +19,7 @@ export class ConfigService {
     };
 
     isProd = () => this.get<string>('NODE_ENV') === 'production';
+    buildVersion = () => this.get<string>('BUILD_VERSION');
 }
 
 export const BOT_PATH = new Token<string>('BOT_PATH');

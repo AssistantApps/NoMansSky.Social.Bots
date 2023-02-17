@@ -49,13 +49,14 @@ export class MastodonService implements IMastodonService {
         return resp.data.id;
     }
 
-
     sendTootWithMedia = (mastoClient: MastodonClientMeta, file: fs.ReadStream, params: MastodonMakeToot): Promise<any> => {
         return mastoClient.client.post('media', { file }).then((resp: any) => {
             const id = resp.data.id;
             this.sendToot(mastoClient, { ...params, media_ids: [id] });
         });
     }
+
+    preferences = (mastoClient: MastodonClientMeta): Promise<any> => mastoClient.client.get('preferences');
 }
 
 export const getMastodonService = () => Container.get(MastodonService);
