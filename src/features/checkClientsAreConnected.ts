@@ -15,6 +15,6 @@ const areClientsStillConnected = async () => {
 
     const mastoClients = inMemoryService.getAllMastodonClients();
     for (const mastoClient of mastoClients) {
-        await mastoService.preferences(mastoClient.client);
+        await mastoService.preferences(mastoClient);
     }
 }

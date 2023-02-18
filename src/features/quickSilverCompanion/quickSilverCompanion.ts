@@ -42,7 +42,6 @@ export const quickSilverCompanionGetDataFromEndpointAndToot = async (
         // TODO maybe send a message to user
     }
 
-    let compiledTemplate: string | null = null;
     let messageToSend = `Greetings traveller`;
     if (username != null) {
         messageToSend += ` @${username}. `;
@@ -50,11 +49,6 @@ export const quickSilverCompanionGetDataFromEndpointAndToot = async (
         messageToSend += `s! `;
     }
     messageToSend += `\nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
-
-    if (compiledTemplate == null) {
-        getLog().e(clientMeta.name, 'error getting community mission details', 'compiledTemplate == null');
-        return;
-    }
 
     const params: MastodonMakeToot = {
         status: messageToSend,
@@ -119,7 +113,7 @@ export const quickSilverCompanionToot = async (props: {
     }
 
     if (compiledTemplate == null) {
-        getLog().e(props.clientMeta.name, 'error getting community mission details', 'compiledTemplate == null');
+        getLog().e(props.clientMeta.name, 'error community mission details', 'compiledTemplate == null');
         return;
     }
 
