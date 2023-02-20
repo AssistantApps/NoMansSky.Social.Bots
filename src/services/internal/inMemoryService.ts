@@ -12,7 +12,7 @@ export class InMemoryService {
     setMastodonClient = (botType: BotType, manipulate: (existingMeta: MastodonClientMeta) => MastodonClientMeta): void => {
         const clientIndex = this._clients.findIndex(mc => mc.type === botType);
         if (clientIndex < 0) {
-            console.error('Could not find mastoClient');
+            console.error('InMemoryService - Could not find mastoClient');
             return;
         }
 
@@ -24,7 +24,7 @@ export class InMemoryService {
     getMastodonClient = (botType: BotType): MastodonClientMeta | undefined => {
         const clientIndex = this._clients.findIndex(mc => mc.type === botType);
         if (clientIndex < 0) {
-            console.error('Could not find mastoClient');
+            console.error('InMemoryService - Could not find mastoClient');
             return;
         }
 

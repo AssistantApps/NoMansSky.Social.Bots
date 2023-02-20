@@ -11,6 +11,7 @@
     "copy-env": "copyfiles ./.env ./build/src/",
     "start": "npm run build && node build/src/server.js",
     "start:dev": "npx nodemon",
+    "start:api": "npm run build && node build/src/api.js",
     "start:test": "npx ts-node -p ./tsconfig.server.json ./src/test.ts",
     "admin": "vite",
     "admin:encrypt": "npx ts-node -p ./tsconfig.server.json ./src/encrypt.ts",
