@@ -19,7 +19,7 @@ interface IProps {
 
 export const cronusRandomReviewSvgTemplate = async (props: IProps) => {
   const dirname = getBotPath();
-  const imagesPath = join(dirname, 'src', 'assets', 'img');
+  const imagesPath = join(dirname, 'assets', 'img');
 
   const selectedBackgroundPath = join(imagesPath, 'cronus', props.selectedBackground);
   const backgroundBase64 = getBase64FromFile(selectedBackgroundPath);
