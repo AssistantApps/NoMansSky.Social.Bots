@@ -1,11 +1,11 @@
-import { DataService, GameItemService, QuicksilverStore } from 'assistantapps-nomanssky-info';
+import { DataService, GameItemModel, GameItemService, QuicksilverStore } from 'assistantapps-nomanssky-info';
 import { createReadStream } from 'fs';
 import { CommunityMissionViewModel } from '../../contracts/generated/communityMissionViewModel';
 
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
-import { getBase64FromAssistantNmsImage, getBufferFromSvg } from '../../helper/fileHelper';
+import { getBase64FromAssistantNmsImage, writePngFromSvg } from '../../helper/fileHelper';
 import { getAssistantNmsApi } from "../../services/api/assistantNmsApiService";
 import { IMastodonService } from '../../services/external/mastodon/mastodonService.interface';
 import { getLog } from "../../services/internal/logService";
@@ -76,19 +76,11 @@ export const quickSilverCompanionToot = async (props: {
     tootParams: MastodonMakeToot
 }) => {
 
-    const dataService = new DataService();
-    const qsStoreItems = await dataService.getQuicksilverStore();
+    const itemData = await quickSilverCompanionGetItemFromCm({
+        botName: props.clientMeta.name,
+        communityMissionData: props.communityMissionData,
+    });
 
-    const { missionId, currentTier } = props.communityMissionData;
-    const current = qsStoreItems.find((qs: QuicksilverStore) => qs.MissionId == missionId);
-    const itemId = current?.Items?.[(currentTier - 1)]?.ItemId;
-    if (itemId == null) {
-        getLog().e(props.clientMeta.name, 'Item not found by tier');
-        return;
-    }
-
-    const gameItemService = new GameItemService();
-    const itemData = await gameItemService.getItemDetails(itemId);
     if (itemData == null) {
         getLog().e(props.clientMeta.name, 'Item not found by id');
         return;
@@ -97,15 +89,14 @@ export const quickSilverCompanionToot = async (props: {
     const shareLink = `https://app.nmsassistant.com/link/en/${itemData.Id}.html`;
     props.tootParams.status = props.tootParams.status + `\n\nCurrent item being researched: ${itemData.Name}.\n${shareLink}`;
 
-    let compiledTemplate: string | null = null;
+    let compiledTemplate: string | undefined;
     try {
-        const imgDestData = await getBase64FromAssistantNmsImage(itemData.Icon);
-
-        compiledTemplate = communityMissionSvgTemplate({
-            ...props.communityMissionData,
+        compiledTemplate = await quickSilverCompanionCompiledTemplate({
+            botName: props.clientMeta.name,
             itemName: itemData.Name,
-            qsCost: itemData.BaseValueUnits,
-            itemImgData: imgDestData,
+            itemIcon: itemData.Icon,
+            itemBaseValueUnits: itemData.BaseValueUnits,
+            communityMissionData: props.communityMissionData,
         });
     }
     catch (ex) {
@@ -133,7 +124,7 @@ export const quickSilverCompanionToot = async (props: {
     // }
 
     try {
-        getBufferFromSvg(
+        writePngFromSvg(
             'qsCompanion-',
             compiledTemplate,
             (outputFilePath: string) => {
@@ -154,4 +145,46 @@ export const quickSilverCompanionToot = async (props: {
     catch (ex) {
         getLog().e(props.clientMeta.name, 'error generating community mission image', ex);
     }
+}
+
+export const quickSilverCompanionCompiledTemplate = async (props: {
+    botName: string,
+    itemName: string,
+    itemIcon: string,
+    itemBaseValueUnits: number,
+    communityMissionData: CommunityMissionViewModel,
+}): Promise<string | undefined> => {
+
+    const imgDestData = await getBase64FromAssistantNmsImage(props.itemIcon);
+
+    const compiledTemplate = communityMissionSvgTemplate({
+        ...props.communityMissionData,
+        itemName: props.itemName,
+        qsCost: props.itemBaseValueUnits,
+        itemImgData: imgDestData,
+    });
+
+    return compiledTemplate;
+}
+
+export const quickSilverCompanionGetItemFromCm = async (props: {
+    botName: string,
+    communityMissionData: CommunityMissionViewModel,
+}): Promise<GameItemModel | undefined> => {
+
+    const dataService = new DataService();
+    const qsStoreItems = await dataService.getQuicksilverStore();
+
+    const { missionId, currentTier } = props.communityMissionData;
+    const current = qsStoreItems.find((qs: QuicksilverStore) => qs.MissionId == missionId);
+    const itemId = current?.Items?.[(currentTier - 1)]?.ItemId;
+    if (itemId == null) {
+        getLog().e(props.botName, 'Item not found by tier');
+        return;
+    }
+
+    const gameItemService = new GameItemService();
+    const itemData = await gameItemService.getItemDetails(itemId);
+
+    return itemData;
 }

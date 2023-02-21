@@ -39,12 +39,7 @@ export const getTempFile = (filenamePrefix: string, extension: string): string =
     return outputFilePath;
 }
 
-export const getBufferFromSvg = async (filenamePrefix: string, compiledTemplate: string, callback: (outputFilePath: string) => void) => {
-    const outputFilePath = getTempFile(filenamePrefix, 'png');
-    if (getConfig().isProd() == false) {
-        // const outputFilePathsvg = getTempFile(filenamePrefix, 'svg');
-        // writeFileSync(outputFilePathsvg, compiledTemplate);
-    }
+export const getBufferFromSvg = (compiledTemplate: string): Buffer => {
 
     const fontFiles = fontMetas.map((fontMeta) => join(getBotPath(), fontMeta.file));
     const opts = {
@@ -62,6 +57,21 @@ export const getBufferFromSvg = async (filenamePrefix: string, compiledTemplate:
     const resvg = new Resvg(compiledTemplate, opts as any)
     const pngData = resvg.render();
     const buffer = pngData.asPng();
+    return buffer;
+}
+
+export const writePngFromSvg = (
+    filenamePrefix: string,
+    compiledTemplate: string,
+    callback: (outputFilePath: string) => void,
+) => {
+    const outputFilePath = getTempFile(filenamePrefix, 'png');
+    if (getConfig().isProd() == false) {
+        const outputFilePathsvg = getTempFile(filenamePrefix, 'svg');
+        writeFileSync(outputFilePathsvg, compiledTemplate);
+    }
+
+    const buffer = getBufferFromSvg(compiledTemplate);
     writeFileSync(outputFilePath, buffer);
     callback(outputFilePath);
 }
@@ -75,7 +85,7 @@ export const getBase64FromAssistantNmsImage = async (iconPath: string): Promise<
     return base64;
 }
 
-export const getBase64FromFile = (file: string): string => {
+export const getBase64FromFile = (file: string, base64DataType: string = 'image/png'): string => {
     const contents = readFileSync(file, "base64");
-    return `data:image/png;base64,${contents}`;
+    return `data:${base64DataType};base64,${contents}`;
 }

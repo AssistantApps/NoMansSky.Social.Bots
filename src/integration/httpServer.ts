@@ -5,8 +5,9 @@ import bodyParser from 'koa-bodyparser';
 
 import { getConfig } from '../services/internal/configService';
 import { getLog } from "../services/internal/logService";
+import { cronusRandom } from './api/cronus';
 import { defaultEndpoint, versionEndpoint } from './api/misc';
-import { qsEndpoint, qsEndpointFromTracker } from './api/quicksilver';
+import { qsEndpoint, qsEndpointFromTracker, qsEndpointViewSvg } from './api/quicksilver';
 
 interface IHttpServerProps {
     authToken: string;
@@ -20,7 +21,10 @@ export const setUpCustomHttpServer = (props: IHttpServerProps) => {
     const router = new Router();
     router.get('/', defaultEndpoint);
     router.post('/qs', qsEndpoint(props.authToken));
-    router.post('/qs-manual', qsEndpointFromTracker(props.authToken));
+    router.post('/qs-anmstracker', qsEndpointFromTracker(props.authToken));
+    router.post('/qs-manual', qsEndpointFromTracker(props.authToken)); // eventually remove this
+    router.post('/qs-view', qsEndpointViewSvg(props.authToken));
+    router.post('/cronus-random', cronusRandom(props.authToken));
     router.get('/version', versionEndpoint(props.authToken));
 
     app.use(bodyParser());

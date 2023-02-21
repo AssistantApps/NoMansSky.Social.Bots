@@ -1,18 +1,21 @@
-import { DataService, GameItemService, QuicksilverStore } from 'assistantapps-nomanssky-info';
-import { createReadStream } from 'fs';
+import { GameItemService, } from 'assistantapps-nomanssky-info';
+import { createReadStream, writeFileSync } from 'fs';
 
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
-import { getBase64FromAssistantNmsImage, getBufferFromSvg } from '../../helper/fileHelper';
+import { getBase64FromAssistantNmsImage, getBufferFromSvg, getTempFile } from '../../helper/fileHelper';
+import { randomIntFromRange } from '../../helper/randomHelper';
 import { getAssistantNmsApi } from "../../services/api/assistantNmsApiService";
 import { getDatabaseService } from '../../services/external/database/databaseService';
 import { IMastodonService } from '../../services/external/mastodon/mastodonService.interface';
 import { getLog } from "../../services/internal/logService";
+import { cronusRandomReviewAvailableBackgrounds, cronusRandomReviewSvgTemplate } from './cronusRandomReview.svg.template';
 
-export const cronusHandler = async (
+export const cronusRandomReviewMentionHandler = async (
     clientMeta: MastodonClientMeta,
-    mastodonService: IMastodonService,
+    payload: MastodonMessageEventData,
+    mastodonService: IMastodonService
 ) => {
     const databaseService = getDatabaseService();
 
@@ -111,4 +114,31 @@ export const cronusHandler = async (
     // catch (ex) {
     //     getLog().e(clientMeta.name, 'error generating community mission image', ex);
     // }
+}
+
+
+export const cronusRandomReviewCompileTemplate = async (): Promise<string> => {
+    const selectedBackgroundIndex = randomIntFromRange(0, cronusRandomReviewAvailableBackgrounds.length);
+
+    const gameItemService = new GameItemService();
+    const cooking = await gameItemService.getJsonList('Cooking.lang.json');
+    const cookingIndex = randomIntFromRange(0, cooking.length);
+    const selectedCookingItem = cooking[cookingIndex];
+
+    const cookingValue = selectedCookingItem.CookingValue;
+    const cookingPerc: string = ((cookingValue + 1) * cookingValue * 47).toFixed(0);
+
+    const compiledTemplate = await cronusRandomReviewSvgTemplate({
+        selectedBackground: cronusRandomReviewAvailableBackgrounds[selectedBackgroundIndex],
+        reviewDialog: 'this is a test image',
+        iconPath: selectedCookingItem.Icon,
+        itemName: selectedCookingItem.Name,
+        naniteValue: cookingPerc,
+        starValue: cookingValue * 5,
+    });
+
+    const outputFilePathsvg = getTempFile('cronus', 'svg');
+    writeFileSync(outputFilePathsvg, compiledTemplate);
+
+    return compiledTemplate;
 }
