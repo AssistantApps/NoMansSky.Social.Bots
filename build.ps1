@@ -1,4 +1,4 @@
-$version = '0.27'
+$version = '0.28'
 
 
 docker build --no-cache -t nms-social-npc-bots -f Dockerfile --build-arg BUILD_VERSION=$version .
