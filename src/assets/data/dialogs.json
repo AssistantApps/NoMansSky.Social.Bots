@@ -232,5 +232,11 @@
             "type": "message",
             "message": "The others will be back soon, kindred. We do not have much time..."
         }
+    ],
+    "cronus1": [
+        {
+            "type": "message",
+            "message": "The others will be back soon, kindred. We do not have much time..."
+        }
     ]
 }
