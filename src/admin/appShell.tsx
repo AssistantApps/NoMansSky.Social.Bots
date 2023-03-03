@@ -58,7 +58,7 @@ export const AppShell: Component = () => {
         const githubFileService = getGithubFileService();
         const versionResult = await githubFileService.getVersionFile();
 
-        if (true || versionResult.isSuccess && versionResult.value.code > adminVersion.code) {
+        if (versionResult.isSuccess && versionResult.value.code > adminVersion.code) {
             const isConfirmed = await confirmationPopup({
                 title: 'Use the latest Admin UI?',
                 description: 'A later version of the tool was found on the Github page. The next step will ask you to copy the credentials in this executable, so that you can paste them into the updated UI',
