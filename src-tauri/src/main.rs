@@ -6,7 +6,7 @@
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn get_enc_key() -> String {
-    "dfe017aaf71d43239a3f661ad9b3a2b8".to_string()
+    "not used any more".to_string()
 }
 
 fn main() {

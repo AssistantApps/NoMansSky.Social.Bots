@@ -1,11 +1,10 @@
 
 import { GridItem, IconButton, Text, Textarea } from '@hope-ui/solid';
 import { Component, createSignal, onMount } from 'solid-js';
+import { getConfig } from '../../services/internal/configService';
 import { PageHeader } from '../components/common/pageHeader';
-import { tauriMethod } from '../constants/tauri';
 import { copyTextToClipboard } from '../helper/browserHelper';
 import { encrypt } from '../helper/encryptHelper';
-import { callTauri } from '../helper/tauriHelper';
 import { ResponsiveCustomGrid } from '../layout/responsiveCustomGrid';
 
 
@@ -17,8 +16,8 @@ export const UtilPage: Component = () => {
         loadDeps();
     })
 
-    const loadDeps = async () => {
-        const secretKey = await callTauri(tauriMethod.encryptKey, '');
+    const loadDeps = () => {
+        const secretKey = getConfig().getEncryptionKey();
         setSecretKey(secretKey);
     }
 

@@ -2,16 +2,20 @@ import { Box, Center, Flex, hope } from "@hope-ui/solid";
 import { Route, Routes } from "@solidjs/router";
 import { Component, createSignal, lazy, onMount, Show, Suspense } from 'solid-js';
 
+import adminVersion from "../assets/data/admin-version.json";
 import { NetworkState } from "../constants/enum/networkState";
 import { ICredential } from "../contracts/credential";
+import { getGithubFileService } from "../services/api/githubFileService";
+import { getConfig } from "../services/internal/configService";
 import { getLog } from "../services/internal/logService";
 import { Sidebar } from './components/common/sidebar';
 import { CenterLoading, LoadingSpinner } from './components/core/loading';
 import { routes } from './constants/route';
-import { tauriFile, tauriMethod } from "./constants/tauri";
+import { tauriFile } from "./constants/tauri";
 import { CredentialsContext } from './context/credentials.context';
-import { decrypt } from "./helper/encryptHelper";
-import { callTauri, loadTauriResource } from "./helper/tauriHelper";
+import { decrypt, encrypt } from "./helper/encryptHelper";
+import { confirmationPopup, CopyPopup } from "./helper/popupHelper";
+import { loadTauriResource } from "./helper/tauriHelper";
 import { RedirectToHome } from "./pages/home";
 
 const HomePage = lazy(() => import("./pages/home"));
@@ -32,8 +36,8 @@ export const AppShell: Component = () => {
 
     const loadAndCompareVersions = async () => {
         let localCreds: ICredential | null = null;
+        const secretKey = getConfig().getEncryptionKey();
         try {
-            const secretKey = await callTauri(tauriMethod.encryptKey, '');
             const resourceString = await loadTauriResource(tauriFile.config);
             const decrypted = decrypt(secretKey, resourceString);
             localCreds = JSON.parse(decrypted);
@@ -51,25 +55,26 @@ export const AppShell: Component = () => {
             setNetworkState(NetworkState.Error);
         }
 
-        // const githubFileService = getGithubFileService();
-        // const versionResult = await githubFileService.getVersionFile();
+        const githubFileService = getGithubFileService();
+        const versionResult = await githubFileService.getVersionFile();
 
-        // if (versionResult.isSuccess && versionResult.value.code > adminVersion.code) {
-        //     const isConfirmed = await confirmationPopup({
-        //         title: 'Use the latest Admin UI?',
-        //         confirmButtonText: 'Use the latest!',
-        //     });
-        //     if (isConfirmed) {
-        //         await CopyPopup({
-        //             title: 'Click to copy credentials',
-        //             description: 'Then paste the creds into the next page',
-        //             textToCopy: JSON.stringify(localCreds),
-        //         });
-        //         setTimeout(() => {
-        //             window.location.href = 'https://admin.nomanssky.social/';
-        //         }, 1);
-        //     }
-        // }
+        if (true || versionResult.isSuccess && versionResult.value.code > adminVersion.code) {
+            const isConfirmed = await confirmationPopup({
+                title: 'Use the latest Admin UI?',
+                description: 'A later version of the tool was found on the Github page. The next step will ask you to copy the credentials in this executable, so that you can paste them into the updated UI',
+                confirmButtonText: 'Use the latest!',
+            });
+            if (isConfirmed) {
+                await CopyPopup({
+                    title: 'Click to copy credentials',
+                    description: 'Then paste the creds into the next page',
+                    textToCopy: encrypt(secretKey, JSON.stringify(localCreds)),
+                });
+                setTimeout(() => {
+                    window.location.href = 'https://admin.nomanssky.social/';
+                }, 1);
+            }
+        }
 
         setCredentials(localCreds!);
         setNetworkState(NetworkState.Success);
@@ -91,7 +96,11 @@ export const AppShell: Component = () => {
                     <Flex maxH="100vh">
                         <Sidebar />
                         <hope.main w="$full" px="3em" overflowY="auto">
-                            <Suspense fallback={<Center width="100%" height="100vh">            <LoadingSpinner />        </Center>} >
+                            <Suspense fallback={
+                                <Center width="100%" height="100vh">
+                                    <LoadingSpinner />
+                                </Center>
+                            }>
                                 <Routes>
                                     <Route path={routes.actualHome} component={HomePage} />
                                     <Route path={routes.genericBot} component={GenericBot} />
