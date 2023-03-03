@@ -1,6 +1,6 @@
 
 import { Box, Button, Center, GridItem, Select, SelectContent, SelectIcon, SelectListbox, SelectOption, SelectOptionIndicator, SelectOptionText, SelectTrigger, SelectValue, Table, Tbody, Td, Tfoot, Th, Thead, Tooltip, Tr, VStack } from '@hope-ui/solid';
-import { Component, createEffect, createSignal, For, onMount, Show, useContext } from 'solid-js';
+import { Component, createSignal, For, onMount, Show, useContext } from 'solid-js';
 import { NetworkState } from '../../constants/enum/networkState';
 import { MastodonDomainBlock } from '../../contracts/mastodonDomainBlock';
 import { getLog } from '../../services/internal/logService';
@@ -24,22 +24,14 @@ export const DomainBlocksPage: Component = () => {
         setup();
     });
 
-    createEffect(() => {
-        getDomainBlocks();
-        page();
-    });
-
-    // createEffect(() => {
-    //     setup();
-    //     pageSize();
-    // });
-
     const setup = async () => {
+        console.log('setup');
         const [mastodonService, tempClient] = await getMastoServiceAndClientMeta(creds);
         if (tempClient == null) return;
 
         const paginator = mastodonService.getDomainBlocks(tempClient, '', pageSize());
         setPaginator(paginator);
+        getDomainBlocks();
     }
 
     const getDomainBlocks = async () => {
@@ -67,10 +59,13 @@ export const DomainBlocksPage: Component = () => {
     }
 
     const renderDomainRow = (domainBlock: MastodonDomainBlock) => {
+        const domainElem = (<span>{domainBlock.domain}</span>);
         return (
             <Tr>
                 <Td>
-                    <Tooltip label={domainBlock.private_comment}><span>{domainBlock.domain}</span></Tooltip>
+                    <Show when={domainBlock.private_comment != null} fallback={domainElem}>
+                        <Tooltip label={domainBlock.private_comment}>{domainElem}</Tooltip>
+                    </Show>
                 </Td>
                 <Td textAlign="center" class="noselect">
                     <Show when={domainBlock.private_comment}>
@@ -133,8 +128,8 @@ export const DomainBlocksPage: Component = () => {
                                             mr={10}
                                             disabled={page() < 2}
                                             onClick={() => {
-                                                // setCurrentLink(prevLink());
                                                 setPage((prev) => (prev - 1));
+                                                getDomainBlocks();
                                             }}
                                             colorScheme="warning"
                                             transform="rotate(180deg)"
@@ -144,8 +139,8 @@ export const DomainBlocksPage: Component = () => {
                                             ml={10}
                                             colorScheme="warning"
                                             onClick={() => {
-                                                // setCurrentLink(nextLink());
                                                 setPage((prev) => (prev + 1));
+                                                getDomainBlocks();
                                             }}
                                         >➤</Button>
                                     </Th>
@@ -154,7 +149,7 @@ export const DomainBlocksPage: Component = () => {
                                             value={pageSize()}
                                             onChange={(value) => {
                                                 setPageSize(value);
-                                                setPage(1);
+                                                setup();
                                             }}>
                                             <SelectTrigger>
                                                 <SelectValue />

@@ -2,21 +2,13 @@ import { Container, Service, Token } from "typedi";
 
 @Service()
 export class ConfigService {
-    getMastodonUrl = (): string => {
-        const processValue = this.get<string>('MASTODON_API_URL');
-        if (processValue == null || processValue.length < 10) return 'https://nomanssky.social';
-        return processValue;
-    }
-    getMastodonTimeout = (): number => {
-        const processValue = this.get<number>('MASTODON_TIMEOUT_MS');
-        if (processValue == null || (processValue.toString()).length < 1 || isNaN(processValue)) return 5000;
-        return processValue;
-    }
-    getAssistantNMSUrl = (): string => this.get<string>('ANMS_API_URL');
-    getAssistantAppsUrl = (): string => this.get<string>('AA_API_URL');
+    getMastodonUrl = (): string => this.get<string>('VITE_MASTODON_API_URL');
+    getMastodonTimeout = (): number => this.get<number>('VITE_MASTODON_TIMEOUT_MS');
+    getAssistantNMSUrl = (): string => this.get<string>('VITE_ANMS_API_URL');
+    getAssistantAppsUrl = (): string => this.get<string>('VITE_AA_API_URL');
 
-    getEncryptionKey = (): string => this.get<string>('ENCRYPTION_KEY');
-    getApiPort = (): number => this.get<number>('API_PORT');
+    getEncryptionKey = (): string => this.get<string>('VITE_ENCRYPTION_KEY');
+    getApiPort = (): number => this.get<number>('VITE_API_PORT');
 
     getXataApiKey = (): string => this.get<string>('XATA_API_KEY');
     getXataDbUrl = (): string => this.get<string>('XATA_DB_URL');

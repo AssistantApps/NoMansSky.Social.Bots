@@ -34,8 +34,9 @@
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="social-admin"></div>
 
-  <script>
-    var process = {};
+  <script type="module">
+    window.process = {};
+    window.process.env = import.meta.env;
   </script>
   <script src="/src/admin.tsx" type="module"></script>
 </body>
