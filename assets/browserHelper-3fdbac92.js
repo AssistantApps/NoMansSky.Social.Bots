@@ -1,0 +1,1 @@
+import{ad as a}from"./index-74d1e11d.js";const c=t=>{var i,o;try{(o=(i=navigator==null?void 0:navigator.clipboard)==null?void 0:i.writeText)==null||o.call(i,t),a.clear(),a.show({status:"info",title:"Copied!",description:t})}catch{}};export{c};
