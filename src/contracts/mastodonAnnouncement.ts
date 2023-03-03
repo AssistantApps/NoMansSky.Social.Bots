@@ -1,4 +1,4 @@
-import { Emoji } from "./mastodonAccount";
+import { MastodonEmoji } from "./mastodonAccount";
 
 export interface MastodonAnnouncement {
     id: string;
@@ -12,11 +12,11 @@ export interface MastodonAnnouncement {
     mentions: any[];
     statuses: any[];
     tags: any[];
-    emojis: Emoji[];
-    reactions: Reaction[];
+    emojis: MastodonEmoji[];
+    reactions: MastodonReaction[];
 }
 
-export interface Reaction {
+export interface MastodonReaction {
     name: string;
     count: number;
     me: boolean;

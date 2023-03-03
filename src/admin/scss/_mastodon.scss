@@ -9,7 +9,8 @@
 }
 
 .conversations {
-    .convo {
+    .convo,
+    .notification {
         width: 100%;
         padding: 0.5em;
         margin: 0.5em;
@@ -31,6 +32,15 @@
 
             .invisible {
                 display: none;
+            }
+        }
+    }
+
+    .notification {
+        .content {
+            &.limit-height {
+                max-height: 75px;
+                overflow: hidden;
             }
         }
     }

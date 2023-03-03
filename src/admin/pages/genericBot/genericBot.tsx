@@ -13,6 +13,7 @@ import { CredentialsContext } from '../../context/credentials.context';
 import { ResponsiveCustomGrid } from '../../layout/responsiveCustomGrid';
 import { BotConversationsViewer } from './botConversationsViewer';
 import { BotCredentials } from './botCredentials';
+import { BotNotificationsViewer } from './botNotificationsViewer';
 import { SpecificBotComponents } from './botSpecific/botSpecific';
 import { BotTootsViewer } from './botTootsViewer';
 import { SmallScreenOnlyDivider } from './commonBotComponents';
@@ -99,6 +100,10 @@ export const GenericBotPage: Component = () => {
                 />
 
                 <BotConversationsViewer
+                    botMeta={botMeta()!}
+                />
+
+                <BotNotificationsViewer
                     botMeta={botMeta()!}
                 />
 

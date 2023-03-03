@@ -3,12 +3,14 @@ import { copyTextToClipboard } from "./browserHelper";
 
 export interface IConfirmationPopupProps {
     title: string;
+    description?: string;
     confirmButtonText: string;
 }
 export const confirmationPopup = async (props: IConfirmationPopupProps): Promise<boolean> => {
 
     const firstSwalPromise = Swal.fire({
         title: props.title,
+        text: props.description,
         showCancelButton: true,
         confirmButtonText: props.confirmButtonText,
     });

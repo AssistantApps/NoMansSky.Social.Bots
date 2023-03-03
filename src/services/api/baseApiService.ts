@@ -8,7 +8,7 @@ export class BaseApiService {
   constructor(newBaseUrl?: String) {
     if (newBaseUrl != null) this._baseUrl = newBaseUrl;
   }
-  protected async get<T>(
+  public async get<T>(
     url: string,
     manipulateHeaders?: () => any,
     manipulateResponse?: (data: AxiosResponse<T, any>) => any
