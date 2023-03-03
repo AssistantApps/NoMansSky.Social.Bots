@@ -21,6 +21,13 @@
   <br /> 
 </div>
 
+Consists of 
+- Multiple bots
+  - Ariadne
+  - TheRealAriadne
+  - QuicksilverCompanion
+- NodeJS API (using KoaJS)
+- Admin UI
 
 
 [assistantAppsTwitter]: https://twitter.com/AssistantApps?ref=AssistantAppsGithub
