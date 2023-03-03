@@ -1,14 +1,14 @@
 
-import { Button, Center, Divider, FormControl, Image, FormLabel, GridItem, HStack, Input, VStack, Box, Tag } from '@hope-ui/solid';
-import { useNavigate, useParams } from '@solidjs/router';
-import { Component, createEffect, createSignal, For, onMount, Show, useContext } from 'solid-js';
+import { Box, Center, GridItem, HStack, Tag, VStack } from '@hope-ui/solid';
+import { Component, createSignal, For, onMount, Show, useContext } from 'solid-js';
+
 import { NetworkState } from '../../constants/enum/networkState';
 import { MastodonAnnouncement } from '../../contracts/mastodonAnnouncement';
-import { getMastodonApi } from '../../services/api/mastodonApiService';
 import { getLog } from '../../services/internal/logService';
 import { PageHeader } from '../components/common/pageHeader';
 import { CenterLoading } from '../components/core/loading';
 import { CredentialsContext } from '../context/credentials.context';
+import { getMastoServiceAndClientMeta } from '../helper/mastodonHelper';
 import { ResponsiveCustomGrid } from '../layout/responsiveCustomGrid';
 
 
@@ -22,16 +22,10 @@ export const AnnouncementsPage: Component = () => {
     });
 
     const getAnnouncements = async () => {
-        if (
-            creds == null ||
-            creds.accounts == null ||
-            creds.accounts.length < 1
-        ) {
-            return;
-        }
-        const botMeta = creds.accounts[0];
-        const mastodonService = getMastodonApi();
-        const announcementsResult = await mastodonService.getAnnouncements(botMeta.accessToken, true);
+        const [mastodonService, tempClient] = await getMastoServiceAndClientMeta(creds);
+        if (tempClient == null) return;
+
+        const announcementsResult = await mastodonService.getAnnouncements(tempClient, true);
         if (announcementsResult.isSuccess == false) {
             getLog().e('Could not fetch announcements', announcementsResult.errorMessage);
             setNetworkState(NetworkState.Error);

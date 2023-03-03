@@ -2,8 +2,16 @@ import { Container, Service, Token } from "typedi";
 
 @Service()
 export class ConfigService {
-    getMastodonUrl = (): string => this.get<string>('MASTODON_API_URL');
-    getMastodonTimeout = (): number => this.get<number>('MASTODON_TIMEOUT_MS');
+    getMastodonUrl = (): string => {
+        const processValue = this.get<string>('MASTODON_API_URL');
+        if (processValue == null || processValue.length < 10) return 'https://nomanssky.social';
+        return processValue;
+    }
+    getMastodonTimeout = (): number => {
+        const processValue = this.get<number>('MASTODON_TIMEOUT_MS');
+        if (processValue == null || (processValue.toString()).length < 1 || isNaN(processValue)) return 5000;
+        return processValue;
+    }
     getAssistantNMSUrl = (): string => this.get<string>('ANMS_API_URL');
     getAssistantAppsUrl = (): string => this.get<string>('AA_API_URL');
 
@@ -15,7 +23,7 @@ export class ConfigService {
     getXataFallbackBranch = (): string => this.get<string>('XATA_FALLBACK_BRANCH');
 
     get<T>(property: string): T {
-        return (process.env?.[property] ?? '') as T;
+        return (process?.env?.[property] ?? '') as T;
     };
 
     isProd = () => this.get<string>('NODE_ENV') === 'production';

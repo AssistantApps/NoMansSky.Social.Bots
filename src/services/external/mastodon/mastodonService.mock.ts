@@ -2,16 +2,15 @@ import fs from "fs";
 import { ICredentialItem } from "../../../contracts/credential";
 import { MastodonClientMeta } from "../../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../../contracts/mastodonMakeToot";
+import { anyObject } from "../../../helper/typescriptHacks";
 import { getLog } from "../../internal/logService";
 import { IMastodonService } from "./mastodonService.interface";
 
 export class MockMastodonService implements IMastodonService {
 
-    createClient(cred: ICredentialItem): any {
+    createClient(cred: ICredentialItem): Promise<any> {
         getLog().i(cred);
-        return {
-
-        };
+        return new Promise((_) => (anyObject));
     };
 
     sendBasicToot = (mastoClient: MastodonClientMeta, message: string, id: string | null = null): Promise<any> => {
@@ -20,7 +19,7 @@ export class MockMastodonService implements IMastodonService {
         }
 
         if (id != null) {
-            params.in_reply_to_id = id;
+            params.inReplyToId = id;
         }
 
         return this.sendToot(mastoClient, params);
@@ -32,12 +31,12 @@ export class MockMastodonService implements IMastodonService {
         }));
     }
 
-    uploadTootMedia = async (mastoClient: MastodonClientMeta, file: fs.ReadStream): Promise<string> => {
+    uploadTootMedia = async (mastoClient: MastodonClientMeta, file: Buffer): Promise<string> => {
         return 'thisIsAnId';
     }
 
 
-    sendTootWithMedia = (mastoClient: MastodonClientMeta, file: fs.ReadStream, params: MastodonMakeToot): Promise<any> => {
+    sendTootWithMedia = (mastoClient: MastodonClientMeta, file: Buffer, params: MastodonMakeToot): Promise<any> => {
         return new Promise(resolve => resolve({
 
         }));

@@ -17,7 +17,7 @@ const fakeClientMeta: MastodonClientMeta = {
     name: 'test',
     dialog: 'ariadne',
     client: anyObject,
-    listener: anyObject,
+    stream: anyObject,
 };
 const fakePayload: any = {
     account: {

@@ -5,7 +5,7 @@ export interface MastodonDomainBlock {
     severity: string;
     reject_media: boolean;
     reject_reports: boolean;
-    private_comment: string;
-    public_comment: string;
+    private_comment?: string | null;
+    public_comment?: string | null;
     obfuscate: boolean;
 }

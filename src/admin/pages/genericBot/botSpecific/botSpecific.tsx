@@ -1,6 +1,6 @@
 
 import { Component, Match, Switch } from 'solid-js';
-import { botsThatUsRandomDialog, BotType } from '../../../../constants/enum/botType';
+import { botsThatUseRandomDialog, BotType } from '../../../../constants/enum/botType';
 import { ICredentialItem } from '../../../../contracts/credential';
 import { SmallScreenOnlyDivider } from '../commonBotComponents';
 import { QSCompanionSpecific } from './qsCompanion';
@@ -14,7 +14,7 @@ export const SpecificBotComponents: Component<IProps> = (props: IProps) => {
 
     return (
         <Switch fallback={<></>}>
-            <Match when={botsThatUsRandomDialog().includes(props.botMeta.type)} >
+            <Match when={botsThatUseRandomDialog().includes(props.botMeta.type)} >
 
                 <>
                     <RandomDialogBotSpecific botMeta={props.botMeta} />

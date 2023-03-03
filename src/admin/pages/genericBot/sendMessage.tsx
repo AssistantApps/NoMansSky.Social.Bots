@@ -1,11 +1,10 @@
 
 import { Box, Button, FormControl, FormLabel, GridItem, HStack, Image, Input, Select, SelectContent, SelectIcon, SelectListbox, SelectOption, SelectOptionIndicator, SelectOptionText, SelectTrigger, SelectValue, Spacer, VStack } from '@hope-ui/solid';
-import { Component, createSignal, For, useContext } from 'solid-js';
+import { Component, createSignal, For } from 'solid-js';
 import { NetworkState } from '../../../constants/enum/networkState';
 import { ICredentialItem } from '../../../contracts/credential';
 import { MastodonMakeToot } from '../../../contracts/mastodonMakeToot';
-import { getMastodonApi } from '../../../services/api/mastodonApiService';
-import { CredentialsContext } from '../../context/credentials.context';
+import { getMastoServiceAndClientMetaFromCred } from '../../helper/mastodonHelper';
 
 interface IProps {
     botMeta: ICredentialItem;
@@ -20,14 +19,14 @@ export const GenericBotPageSendMessage: Component<IProps> = (props: IProps) => {
     const sendToot = async () => {
         setNetworkState(NetworkState.Loading);
 
-        const botMeta = props.botMeta
-        const mastodonService = getMastodonApi();
+        const [mastodonService, tempClient] = await getMastoServiceAndClientMetaFromCred(props.botMeta);
+        if (tempClient == null) return;
 
         const params: MastodonMakeToot = {
             status: tootMessage(),
             visibility: visibility(),
         }
-        await mastodonService.createToot(botMeta.accessToken, params);
+        await mastodonService.sendToot(tempClient, params);
         setNetworkState(NetworkState.Success);
     }
 

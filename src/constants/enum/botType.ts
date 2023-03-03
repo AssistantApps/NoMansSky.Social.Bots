@@ -16,7 +16,7 @@ export const dontSetupListenersBotTypes = () => [
     BotType.assistantnmstracker,
 ].map(bt => bt.toString());
 
-export const botsThatUsRandomDialog = () => [
+export const botsThatUseRandomDialog = () => [
     BotType.ariadne,
     BotType.theRealAriadne,
 ];

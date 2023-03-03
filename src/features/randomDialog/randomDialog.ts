@@ -1,7 +1,8 @@
+import { mastodon } from "masto";
+
 import { GithubDialogLines, GithubDialogType } from "../../contracts/github/githubDialog";
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
-import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
 import { randomIntFromRange } from "../../helper/randomHelper";
 import { getGithubFileService } from "../../services/api/githubFileService";
 import { IMastodonService } from "../../services/external/mastodon/mastodonService.interface";
@@ -9,7 +10,7 @@ import { getLog } from "../../services/internal/logService";
 
 export const randomDialogHandler = async (
     clientMeta: MastodonClientMeta,
-    payload: MastodonMessageEventData,
+    payload: mastodon.v1.Notification,
     mastodonService: IMastodonService
 ) => {
     const scheduledDate = new Date();
@@ -39,9 +40,9 @@ export const randomDialogHandler = async (
     if (selectedDialogOption.type == GithubDialogType.message) {
         const params: MastodonMakeToot = {
             status: `@${payload.account.username} ${selectedDialogOption.message}`,
-            in_reply_to_id: payload.status.id,
-            visibility: payload.status.visibility,
-            scheduled_at: scheduledDate.toISOString(),
+            inReplyToId: payload.status?.id,
+            visibility: payload.status?.visibility,
+            scheduledAt: scheduledDate.toISOString(),
         }
         getLog().i(clientMeta.name, 'random dialog response', params);
         await mastodonService.sendToot(clientMeta, params);

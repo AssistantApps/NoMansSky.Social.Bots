@@ -4,6 +4,7 @@ import { Container } from "typedi";
 import devCreds from './assets/data/credentials.dev.json';
 import prodCreds from './assets/data/credentials.json';
 import { dontSetupListenersBotTypes } from './constants/enum/botType';
+import { ICredential } from './contracts/credential';
 import { MastodonClientMeta } from './contracts/mastoClientMeta';
 import { setupConnectedInterval } from './features/checkClientsAreConnected';
 import { setupListenersForClientMeta } from './helper/clientHelper';
@@ -22,7 +23,7 @@ const main = async () => {
     const mastoService = getMastodonService();
     const inMemoryService = getMemory();
 
-    const credentialObj = getConfig().isProd()
+    const credentialObj: ICredential = getConfig().isProd()
         ? prodCreds
         : devCreds;
 
@@ -31,10 +32,11 @@ const main = async () => {
         if (dontSetupListenersBotTypes().includes(cred.type)) continue;
 
         const credAsAny: any = (cred as any);
+        const actualClient = await mastoService.createClient(credAsAny);
         mastoClients.push({
             ...credAsAny,
-            client: mastoService.createClient(credAsAny),
-            listener: null,
+            client: actualClient,
+            stream: null,
         });
         getLog().i(`\t${cred.name} client ✔`);
     }

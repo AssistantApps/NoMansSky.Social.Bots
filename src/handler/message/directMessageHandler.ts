@@ -1,12 +1,13 @@
-import { botsThatUsRandomDialog, BotType } from "../../constants/enum/botType";
-import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
+import { mastodon } from "masto";
+
+import { botsThatUseRandomDialog, BotType } from "../../constants/enum/botType";
 import { quickSilverCompanionMentionHandler } from "../../features/quickSilverCompanion/quickSilverCompanion";
 import { randomDialogHandler } from "../../features/randomDialog/randomDialog";
 import { getMastodonService } from "../../services/external/mastodon/mastodonService";
 import { getMemory } from "../../services/internal/inMemoryService";
 import { getLog } from "../../services/internal/logService";
 
-export const onDirectMessageHandler = async (botName: string, botType: BotType, payload: MastodonMessageEventData) => {
+export const onDirectMessageHandler = async (botName: string, botType: BotType, payload: mastodon.v1.Notification) => {
     const mastodonService = getMastodonService();
     const memoryService = getMemory();
 
@@ -16,7 +17,8 @@ export const onDirectMessageHandler = async (botName: string, botType: BotType, 
         return;
     }
 
-    if (botsThatUsRandomDialog().includes(botType)) {
+    if (botsThatUseRandomDialog().includes(botType)) {
+        getLog().i(`${botName} - Random dialog handler`);
         await randomDialogHandler(clientMeta, payload, mastodonService);
     }
 

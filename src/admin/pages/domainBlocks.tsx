@@ -1,13 +1,13 @@
 
 import { Box, Button, Center, GridItem, Select, SelectContent, SelectIcon, SelectListbox, SelectOption, SelectOptionIndicator, SelectOptionText, SelectTrigger, SelectValue, Table, Tbody, Td, Tfoot, Th, Thead, Tooltip, Tr, VStack } from '@hope-ui/solid';
-import { Component, createEffect, createSignal, For, Show, useContext } from 'solid-js';
+import { Component, createEffect, createSignal, For, onMount, Show, useContext } from 'solid-js';
 import { NetworkState } from '../../constants/enum/networkState';
 import { MastodonDomainBlock } from '../../contracts/mastodonDomainBlock';
-import { getMastodonApi } from '../../services/api/mastodonApiService';
 import { getLog } from '../../services/internal/logService';
 import { PageHeader } from '../components/common/pageHeader';
 import { CenterLoading } from '../components/core/loading';
 import { CredentialsContext } from '../context/credentials.context';
+import { getMastoServiceAndClientMeta } from '../helper/mastodonHelper';
 import { ResponsiveCustomGrid } from '../layout/responsiveCustomGrid';
 
 
@@ -16,46 +16,53 @@ export const DomainBlocksPage: Component = () => {
     const creds = useContext(CredentialsContext);
     const [networkState, setNetworkState] = createSignal(NetworkState.Loading);
     const [domainBlocks, setDomainBlocks] = createSignal<Array<MastodonDomainBlock>>([]);
+    const [paginator, setPaginator] = createSignal<any>();
     const [pageSize, setPageSize] = createSignal<number>(pageSizeOptions[0]);
     const [page, setPage] = createSignal<number>(1);
-    const [prevLink, setPrevLink] = createSignal<string>('');
-    const [nextLink, setNextLink] = createSignal<string>('');
-    const [currentLink, setCurrentLink] = createSignal<string>('');
 
-    // onMount(() => {
-    //     getDomainBlocks();
-    // });
+    onMount(() => {
+        setup();
+    });
 
     createEffect(() => {
         getDomainBlocks();
-    }, [page, pageSize]);
+        page();
+    });
+
+    // createEffect(() => {
+    //     setup();
+    //     pageSize();
+    // });
+
+    const setup = async () => {
+        const [mastodonService, tempClient] = await getMastoServiceAndClientMeta(creds);
+        if (tempClient == null) return;
+
+        const paginator = mastodonService.getDomainBlocks(tempClient, '', pageSize());
+        setPaginator(paginator);
+    }
 
     const getDomainBlocks = async () => {
-        if (
-            creds == null ||
-            creds.accounts == null ||
-            creds.accounts.length < 1
-        ) {
-            return;
-        }
-        const botMeta = creds.accounts[0];
-        console.log(botMeta)
-        const mastodonService = getMastodonApi();
-        const domainBlocksResult = await mastodonService.getDomainBlocks(botMeta.accessToken, currentLink(), pageSize());
-        if (domainBlocksResult.isSuccess == false) {
+        const localPaginator = paginator();
+        if (localPaginator == null) return;
+        console.log('getDomainBlocks', localPaginator);
+
+        const domainBlocksResult = await localPaginator;
+        if (domainBlocksResult == null || domainBlocksResult.length == null || domainBlocksResult.length < 1) {
             getLog().e('Could not fetch domain blocks', domainBlocksResult.errorMessage);
             setNetworkState(NetworkState.Error);
         }
 
-        setDomainBlocks(domainBlocksResult.value);
-        setPrevLink(domainBlocksResult.prevPage);
-        setNextLink(domainBlocksResult.nextPage);
+        setPaginator(localPaginator);
+        setDomainBlocks(domainBlocksResult);
         setNetworkState(NetworkState.Success);
     }
 
     const deleteDomainBlocks = (id: string) => async () => {
-        const mastodonService = getMastodonApi();
-        const domainBlocksResult = await mastodonService.unblockDomain(id);
+        const [mastodonService, tempClient] = await getMastoServiceAndClientMeta(creds);
+        if (tempClient == null) return;
+
+        await mastodonService.unblockDomain(tempClient, id);
         await getDomainBlocks();
     }
 
@@ -126,7 +133,7 @@ export const DomainBlocksPage: Component = () => {
                                             mr={10}
                                             disabled={page() < 2}
                                             onClick={() => {
-                                                setCurrentLink(prevLink());
+                                                // setCurrentLink(prevLink());
                                                 setPage((prev) => (prev - 1));
                                             }}
                                             colorScheme="warning"
@@ -137,7 +144,7 @@ export const DomainBlocksPage: Component = () => {
                                             ml={10}
                                             colorScheme="warning"
                                             onClick={() => {
-                                                setCurrentLink(nextLink());
+                                                // setCurrentLink(nextLink());
                                                 setPage((prev) => (prev + 1));
                                             }}
                                         >➤</Button>

@@ -1,10 +1,10 @@
 import { DataService, GameItemModel, GameItemService, QuicksilverStore } from 'assistantapps-nomanssky-info';
-import { createReadStream } from 'fs';
-import { CommunityMissionViewModel } from '../../contracts/generated/communityMissionViewModel';
+import { createReadStream, readFileSync } from 'fs';
+import { mastodon } from 'masto';
 
+import { CommunityMissionViewModel } from '../../contracts/generated/communityMissionViewModel';
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
-import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
 import { getBase64FromAssistantNmsImage, writePngFromSvg } from '../../helper/fileHelper';
 import { getAssistantNmsApi } from "../../services/api/assistantNmsApiService";
 import { IMastodonService } from '../../services/external/mastodon/mastodonService.interface';
@@ -13,14 +13,14 @@ import { communityMissionSvgTemplate } from './communityMission.svg.template';
 
 export const quickSilverCompanionMentionHandler = async (
     clientMeta: MastodonClientMeta,
-    payload: MastodonMessageEventData,
+    payload: mastodon.v1.Notification,
     mastodonService: IMastodonService
 ) => {
     quickSilverCompanionGetDataFromEndpointAndToot(
         clientMeta,
         mastodonService,
-        payload.status.id,
-        payload.status.visibility,
+        payload.status?.id,
+        payload.status?.visibility,
         payload.account.username
     );
 }
@@ -53,11 +53,11 @@ export const quickSilverCompanionGetDataFromEndpointAndToot = async (
     const params: MastodonMakeToot = {
         status: messageToSend,
         visibility: visibility,
-        scheduled_at: scheduledDate.toISOString(),
+        scheduledAt: scheduledDate.toISOString(),
     }
 
     if (replyToId != null) {
-        params.in_reply_to_id = replyToId;
+        params.inReplyToId = replyToId;
     }
 
     await quickSilverCompanionToot({
@@ -128,17 +128,10 @@ export const quickSilverCompanionToot = async (props: {
             'qsCompanion-',
             compiledTemplate,
             (outputFilePath: string) => {
-                const fileStream = createReadStream(outputFilePath);
-                props.mastodonService.uploadTootMedia(props.clientMeta, fileStream).then((mediaId) => {
-                    // const mediaIdCacheContent = JSON.stringify([mediaId]);
-                    // writeFileSync(mediaIdCache, mediaIdCacheContent);
+                const fileStream = readFileSync(outputFilePath);
+                props.mastodonService.sendTootWithMedia(props.clientMeta, fileStream, props.tootParams);
+                getLog().i(props.clientMeta.name, 'quicksilver companion response', props.tootParams);
 
-                    props.mastodonService.sendToot(props.clientMeta, {
-                        ...props.tootParams,
-                        media_ids: [mediaId],
-                    });
-                    getLog().i(props.clientMeta.name, 'quicksilver companion response', props.tootParams);
-                });
             }
         );
     }
