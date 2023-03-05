@@ -36,7 +36,7 @@
     "@tauri-apps/api": "^1.2.0",
     "@types/koa": "^2.13.5",
     "@xata.io/client": "^0.22.1",
-    "assistantapps-nomanssky-info": "^4.1.4777",
+    "assistantapps-nomanssky-info": "^4.1.4780",
     "axios": "^1.3.2",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.7",

@@ -12,13 +12,15 @@ export const setupConnectedInterval = () => {
 }
 
 const areClientsStillConnected = async () => {
+    getLog().i('areClientsStillConnected check');
     const inMemoryService = getMemory();
     const mastoService = getMastodonService();
 
     const mastoClients = inMemoryService.getAllMastodonClients();
     for (const mastoClient of mastoClients) {
         try {
-            await mastoService.preferences(mastoClient);
+            const botPref = await mastoService.preferences(mastoClient);
+            getLog().i(`${mastoClient.name} - preference - ${botPref["posting:default:visibility"]}`);
         } catch (err: any) {
             getLog().e('areClientsStillConnected', err);
             getLog().i('reconnecting');

@@ -4,16 +4,28 @@ import { getMemory } from "../services/internal/inMemoryService";
 import { getLog } from "../services/internal/logService";
 
 export const onErrorHandler = (botName: string, botType: BotType) => (err: any) => {
-    getLog().e(botName, err);
-    if (err.toString().includes('aborted')) {
+    getLog().e(botName, botType, 'onErrorHandler', err);
+    // if (err.toString().includes('aborted')) {
 
-        getLog().i('reconnecting');
-        const inMemoryService = getMemory();
+    //     getLog().i('reconnecting');
+    //     const inMemoryService = getMemory();
 
-        const currentClient = inMemoryService.getMastodonClient(botType);
-        if (currentClient != null) {
-            reCreateClientAndListeners(currentClient);
-            getLog().i(`${botName} - should be reconnected`);
-        }
+    //     const currentClient = inMemoryService.getMastodonClient(botType);
+    //     if (currentClient != null) {
+    //         reCreateClientAndListeners(currentClient);
+    //         getLog().i(`${botName} - should be reconnected`);
+    //     }
+    // }
+}
+
+export const onDisconnectHandler = (botName: string, botType: BotType) => (err: any) => {
+    getLog().e(botName, 'onDisconnectHandler', err);
+
+    const inMemoryService = getMemory();
+
+    const currentClient = inMemoryService.getMastodonClient(botType);
+    if (currentClient != null) {
+        reCreateClientAndListeners(currentClient);
+        getLog().i(`${botName} - should be reconnected`);
     }
 }

@@ -1,5 +1,5 @@
 import { DataService, GameItemModel, GameItemService, QuicksilverStore } from 'assistantapps-nomanssky-info';
-import { createReadStream, readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { mastodon } from 'masto';
 
 import { CommunityMissionViewModel } from '../../contracts/generated/communityMissionViewModel';
@@ -82,7 +82,7 @@ export const quickSilverCompanionToot = async (props: {
     });
 
     if (itemData == null) {
-        getLog().e(props.clientMeta.name, 'Item not found by id');
+        getLog().e(props.clientMeta.name, 'quickSilverCompanionToot - itemData is null');
         return;
     }
 
@@ -172,7 +172,7 @@ export const quickSilverCompanionGetItemFromCm = async (props: {
     const current = qsStoreItems.find((qs: QuicksilverStore) => qs.MissionId == missionId);
     const itemId = current?.Items?.[(currentTier - 1)]?.ItemId;
     if (itemId == null) {
-        getLog().e(props.botName, 'Item not found by tier');
+        getLog().e(props.botName, 'quickSilverCompanionGetItemFromCm', 'Item not found by tier', { missionId, currentTier });
         return;
     }
 

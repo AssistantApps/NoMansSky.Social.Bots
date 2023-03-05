@@ -6,7 +6,6 @@ import prodCreds from './assets/data/credentials.json';
 import { dontSetupListenersBotTypes } from './constants/enum/botType';
 import { ICredential } from './contracts/credential';
 import { MastodonClientMeta } from './contracts/mastoClientMeta';
-import { setupConnectedInterval } from './features/checkClientsAreConnected';
 import { setupListenersForClientMeta } from './helper/clientHelper';
 import { setUpCustomHttpServer } from "./integration/httpServer";
 import { getMastodonService } from "./services/external/mastodon/mastodonService";
@@ -52,8 +51,8 @@ const main = async () => {
         authToken: credentialObj.apiAuthToken,
     });
 
-    const checkClientsInterval = setupConnectedInterval();
-    getLog().i(`Setup client checker... ${checkClientsInterval.toString()}`);
+    // const checkClientsInterval = setupConnectedInterval();
+    // getLog().i(`Setup client checker... ${checkClientsInterval.toString()}`);
 }
 
 main();
