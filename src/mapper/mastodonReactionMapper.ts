@@ -1,7 +1,7 @@
 import { mastodon } from "masto"
-import { Reaction } from "../contracts/mastodonAnnouncement"
+import { MastodonReaction } from "../contracts/mastodonAnnouncement"
 
-export const mapReactionToDto = (orig: mastodon.v1.Reaction): Reaction => {
+export const mapReactionToDto = (orig: mastodon.v1.Reaction): MastodonReaction => {
     return {
         name: orig.name,
         count: orig.count,

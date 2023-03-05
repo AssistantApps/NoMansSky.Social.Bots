@@ -1,4 +1,4 @@
-import { Emoji, MastodonAccount } from "./mastodonAccount";
+import { MastodonEmoji, MastodonAccount } from "./mastodonAccount";
 
 export interface MastodonMessageEventData {
     id: string;
@@ -35,7 +35,7 @@ export interface Status {
     media_attachments: any[];
     mentions: any[];
     tags: any[];
-    emojis: Emoji[];
+    emojis: MastodonEmoji[];
     card: null;
     poll: null;
 }

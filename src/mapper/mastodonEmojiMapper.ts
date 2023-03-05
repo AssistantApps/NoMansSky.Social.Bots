@@ -1,7 +1,7 @@
 import { mastodon } from "masto"
-import { Emoji } from "../contracts/mastodonAccount"
+import { MastodonEmoji } from "../contracts/mastodonAccount"
 
-export const mapEmojiToDto = (orig: mastodon.v1.CustomEmoji): Emoji => {
+export const mapEmojiToDto = (orig: mastodon.v1.CustomEmoji): MastodonEmoji => {
     return {
         shortcode: orig.shortcode,
         url: orig.url,

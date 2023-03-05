@@ -8,8 +8,8 @@ COPY tsconfig*.json ./
 COPY src ./src
 RUN npm ci
 RUN npm run build
-RUN npm run copy-assets
-RUN npm run copy-assets2
+RUN npm run copy:assets
+RUN npm run copy:assets2
 COPY ./.env ./build/src/.env
 RUN npm prune --production
 
