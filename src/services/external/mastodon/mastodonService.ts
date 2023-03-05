@@ -28,15 +28,11 @@ export class MastodonService implements IMastodonService {
     }
 
     createClient(cred: ICredentialItem): Promise<mastodon.Client> {
-        getLog().i('createClient', cred.name, cred.type);
-        // const t = await login({
         return login({
             url: this._config.getMastodonUrl(),
             accessToken: cred.accessToken,
             timeout: this._config.getMastodonTimeout(),
         });
-        // const ttt = await t.v1.stream.streamPublicTimeline()
-        // t.v1.statuses.create()
     };
 
     getStream = (mastoClient: MastodonClientMeta): Promise<WsEvents> => mastoClient.client.v1.stream.streamUser();

@@ -7,7 +7,7 @@ import { getLog } from "../services/internal/logService";
 
 export const setupListenersForClientMeta = async (mastoClient: MastodonClientMeta) => {
     const botName = mastoClient.name;
-    getLog().i(botName, 'setupListenersForClientMeta');
+    getLog().i(botName, 'Setting up listeners for bot');
 
     const mastodonService = getMastodonService();
     const stream = await mastodonService.getStream(mastoClient);
