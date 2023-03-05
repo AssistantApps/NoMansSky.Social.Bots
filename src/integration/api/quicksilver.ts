@@ -42,7 +42,13 @@ export const qsEndpointFromTracker = (authToken: string) => async (ctx: Koa.Defa
         return;
     }
 
-    const bodyParams: CommunityMissionViewModel = ctx.request.body;
+    const bodyParams: any = ctx.request.body;
+    const mappedBodyParams: CommunityMissionViewModel = {
+        missionId: bodyParams.MissionId,
+        currentTier: bodyParams.CurrentTier,
+        percentage: bodyParams.Percentage,
+        totalTiers: bodyParams.TotalTiers,
+    };
 
     const inMemoryService = getMemory();
     const mastoService = getMastodonService();
@@ -63,7 +69,7 @@ export const qsEndpointFromTracker = (authToken: string) => async (ctx: Koa.Defa
     await quickSilverCompanionToot({
         clientMeta: qsMeta,
         mastodonService: mastoService,
-        communityMissionData: bodyParams,
+        communityMissionData: mappedBodyParams,
         tootParams,
     });
 
