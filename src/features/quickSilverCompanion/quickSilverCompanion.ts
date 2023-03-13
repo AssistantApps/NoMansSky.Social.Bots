@@ -87,7 +87,7 @@ export const quickSilverCompanionToot = async (props: {
     }
 
     const shareLink = `https://app.nmsassistant.com/link/en/${itemData.Id}.html`;
-    props.tootParams.status = props.tootParams.status + `\n\nCurrent item being researched: ${itemData.Name}.\n${shareLink}`;
+    props.tootParams.status = props.tootParams.status + `\n\nCurrent item being researched: ${itemData.Name}.\n${shareLink}\n\n#NoMansSky`;
 
     let compiledTemplate: string | undefined;
     try {
