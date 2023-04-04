@@ -1,11 +1,9 @@
 import { Container, Inject, Service } from "typedi";
-import { XataClient, YoutubeVideoNotificationsRecord } from "../../../integration/xata";
+import { XataClient, CronusSeasonSelections, YoutubeVideoNotificationsRecord } from "../../../integration/xata";
 import { ConfigService } from "../../internal/configService";
-import { IDatabaseService } from "./databaseService.interface";
-import { CronusSeasonSelection } from "./entity/cronusSeasonSelection";
 
 @Service()
-export class DatabaseService implements IDatabaseService {
+export class DatabaseService {
     private xata: XataClient;
 
     constructor(@Inject() config: ConfigService) {
@@ -17,7 +15,7 @@ export class DatabaseService implements IDatabaseService {
         });
     }
 
-    addCronusSeasonSelection = async (seasonId: number, appId: string): Promise<CronusSeasonSelection> => {
+    addCronusSeasonSelection = async (seasonId: number, appId: string): Promise<CronusSeasonSelections> => {
         const newRecord = await this.xata.db.CronusSeasonSelections.create({
             appId,
             seasonId,
@@ -26,11 +24,13 @@ export class DatabaseService implements IDatabaseService {
         return newRecord;
     };
 
-    getAllCronusSeasonSelections = async (): Promise<Array<CronusSeasonSelection>> =>
+    getAllCronusSeasonSelections = async (): Promise<Array<CronusSeasonSelections>> =>
         this.xata.db.CronusSeasonSelections.getAll();
 
-    getAllCronusSelectionsForSeason = async (seasonId: number): Promise<Array<CronusSeasonSelection>> =>
-        this.xata.db.CronusSeasonSelections.getAll();
+    getAllCronusSelectionsForSeason = async (seasonId: number): Promise<Array<CronusSeasonSelections | null>> =>
+        this.xata.db.CronusSeasonSelections
+            .filter({ seasonId })
+            .getAll();
 
     getYoutubeVideoByChannelAndVideoId = async (channelId: string, videoId: string): Promise<YoutubeVideoNotificationsRecord | null> =>
         this.xata.db.YoutubeVideoNotifications
