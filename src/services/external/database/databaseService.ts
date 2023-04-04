@@ -1,5 +1,5 @@
 import { Container, Inject, Service } from "typedi";
-import { XataClient } from "../../../integration/xata";
+import { XataClient, YoutubeVideoNotificationsRecord } from "../../../integration/xata";
 import { ConfigService } from "../../internal/configService";
 import { IDatabaseService } from "./databaseService.interface";
 import { CronusSeasonSelection } from "./entity/cronusSeasonSelection";
@@ -31,6 +31,21 @@ export class DatabaseService implements IDatabaseService {
 
     getAllCronusSelectionsForSeason = async (seasonId: number): Promise<Array<CronusSeasonSelection>> =>
         this.xata.db.CronusSeasonSelections.getAll();
+
+    getYoutubeVideoByChannelAndVideoId = async (channelId: string, videoId: string): Promise<YoutubeVideoNotificationsRecord | null> =>
+        this.xata.db.YoutubeVideoNotifications
+            .filter({ channelId, videoId })
+            .sort('publishDate', 'desc')
+            .getFirst();
+
+    addYoutubeVideoForChannelId = async (channelId: string, videoId: string, publishDate: Date): Promise<YoutubeVideoNotificationsRecord> => {
+        const newRecord = await this.xata.db.YoutubeVideoNotifications.create({
+            channelId,
+            videoId,
+            publishDate,
+        });
+        return newRecord;
+    };
 }
 
 export const getDatabaseService = () => Container.get(DatabaseService);

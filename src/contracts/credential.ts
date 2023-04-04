@@ -4,6 +4,7 @@ export interface ICredential {
     // apiUrl: string;
     apiAuthToken: string;
     accounts: Array<ICredentialItem>;
+    youtubeChannelsToToot: Array<IYoutubePostCredentialItem>;
 }
 
 export interface ICredentialItem {
@@ -18,4 +19,11 @@ export interface ICredentialItem {
     clientKey: string;
     clientSecret: string;
     accessToken: string;
+}
+
+export interface IYoutubePostCredentialItem {
+    name: string;
+    channelId: string;
+    accessToken: string;
+    customHashtags?: string;
 }

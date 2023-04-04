@@ -12,6 +12,7 @@ import { getMastodonService } from "./services/external/mastodon/mastodonService
 import { BOT_PATH, getConfig } from "./services/internal/configService";
 import { getMemory } from './services/internal/inMemoryService';
 import { getLog } from "./services/internal/logService";
+import { setUpYoutubePolling } from './integration/youtubePolling';
 
 require('dotenv').config();
 
@@ -50,6 +51,8 @@ const main = async () => {
     setUpCustomHttpServer({
         authToken: credentialObj.apiAuthToken,
     });
+
+    setUpYoutubePolling(credentialObj.youtubeChannelsToToot);
 
     // const checkClientsInterval = setupConnectedInterval();
     // getLog().i(`Setup client checker... ${checkClientsInterval.toString()}`);

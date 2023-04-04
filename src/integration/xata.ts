@@ -20,6 +20,14 @@ const tables = [
       },
     ],
   },
+  {
+    name: "YoutubeVideoNotifications",
+    columns: [
+      { name: "channelId", type: "string" },
+      { name: "videoId", type: "string" },
+      { name: "publishDate", type: "datetime" },
+    ],
+  },
 ] as const;
 
 export type SchemaTables = typeof tables;
@@ -28,8 +36,14 @@ export type InferredTypes = SchemaInference<SchemaTables>;
 export type CronusSeasonSelections = InferredTypes["CronusSeasonSelections"];
 export type CronusSeasonSelectionsRecord = CronusSeasonSelections & XataRecord;
 
+export type YoutubeVideoNotifications =
+  InferredTypes["YoutubeVideoNotifications"];
+export type YoutubeVideoNotificationsRecord = YoutubeVideoNotifications &
+  XataRecord;
+
 export type DatabaseSchema = {
   CronusSeasonSelections: CronusSeasonSelectionsRecord;
+  YoutubeVideoNotifications: YoutubeVideoNotificationsRecord;
 };
 
 const DatabaseClient = buildClient();

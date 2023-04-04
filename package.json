@@ -1,6 +1,6 @@
 {
   "name": "nomanssky.social.bots",
-  "version": "1.0.9",
+  "version": "1.0.12",
   "description": "",
   "author": "Kurt Lourens",
   "homepage": "https://github.com/AssistantApps/NoMansSky.Social.Bots#readme",
@@ -14,8 +14,8 @@
     "copy:env": "copyfiles ./.env ./build/src/",
     "start": "npm run build && npm run start:js",
     "start:js": "node build/src/server.js",
+    "start:jsapi": "node build/src/api.js",
     "unused:start:dev": "npx nodemon",
-    "untested:start:api": "npx ts-node -p ./tsconfig.server.json ./src/api.ts",
     "untested:start:test": "npx ts-node -p ./tsconfig.server.json ./src/test.ts",
     "admin": "vite",
     "admin:dev": "vite",
@@ -47,6 +47,7 @@
     "koa-bodyparser": "^4.3.0",
     "masto": "^5.10.0",
     "reflect-metadata": "^0.1.13",
+    "rss-converter": "^1.1.6",
     "sweetalert2": "^11.7.1",
     "typedi": "^0.10.0"
   },
