@@ -21,7 +21,7 @@ export const quickSilverCompanionMentionHandler = async (
         mastodonService,
         payload.status?.id,
         payload.status?.visibility,
-        payload.account.username
+        payload.account.acct
     );
 }
 

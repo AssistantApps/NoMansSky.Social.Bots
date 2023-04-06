@@ -10,3 +10,4 @@ dist
 /src/assets/data/credentials.dev.json
 /src/assets/data/credentials.enc.json
 /src/assets/data/credentials.env.json
+src/assets/data/credentials.enc

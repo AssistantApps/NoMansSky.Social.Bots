@@ -20,7 +20,7 @@ export const cronusRandom = (authToken: string) => async (ctx: Koa.DefaultContex
     //     return;
     // }
 
-    var template = await cronusRandomReviewCompileTemplate();
+    const template = await cronusRandomReviewCompileTemplate();
 
     ctx.body = template;
     ctx.set('Content-Type', 'image/svg+xml');

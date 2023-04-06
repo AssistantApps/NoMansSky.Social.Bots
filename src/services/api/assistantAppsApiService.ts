@@ -1,4 +1,6 @@
 import { Container, Service, Inject } from "typedi";
+import { SteamBranch } from "../../contracts/generated/steamBranch";
+import { ResultWithValue } from "../../contracts/resultWithValue";
 
 import { ConfigService } from "../internal/configService";
 // import { ResultWithValueAndPagination } from '../../contracts/resultWithValue';
@@ -13,6 +15,9 @@ export class AssistantAppsApiService extends BaseApiService {
         super(config.getAssistantAppsUrl());
     }
 
+    getSteamBranches(): Promise<ResultWithValue<Array<SteamBranch>>> {
+        return this.get<Array<SteamBranch>>('Steam/Branches/1');
+    }
     // async getWhatIsNewItems(search: VersionSearchViewModel): Promise<ResultWithValueAndPagination<Array<VersionViewModel>>> {
     //     const result = await this.post<Array<VersionViewModel>, VersionSearchViewModel>(
     //         'Version/Search', search,

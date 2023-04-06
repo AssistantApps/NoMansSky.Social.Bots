@@ -27,7 +27,7 @@ const main = async () => {
         authToken: credentialObj.apiAuthToken,
     });
 
-    setUpYoutubePolling(credentialObj.youtubeChannelsToToot);
+    // setUpYoutubePolling(credentialObj.youtubeChannelsToToot);
 
     setInterval(function () {
         console.log("timer that keeps nodejs processing running");
