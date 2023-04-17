@@ -18,7 +18,11 @@ export const setUpYoutubePolling = async (youtubeChannelsToToot: Array<IYoutubeP
     setInterval(async () => {
         const dbServ = getDatabaseService();
         for (const youtubeChannel of youtubeChannelsToToot) {
-            await handleYtChannelWatch(dbServ, youtubeChannel);
+            try {
+                await handleYtChannelWatch(dbServ, youtubeChannel);
+            } catch (e) {
+                console.error(`failed to fetch YT data for '${youtubeChannel.name}'`)
+            }
         }
     }, pollInterval);
 

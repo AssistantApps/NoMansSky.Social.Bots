@@ -1,3 +1,4 @@
+import { WsEvents } from "masto";
 import { MastodonClientMeta } from "../contracts/mastoClientMeta";
 import { onDisconnectHandler, onErrorHandler } from "../handler/errorHandler";
 import { onNotificationHandler, onConversationHandler } from "../handler/messageHandler";
@@ -10,11 +11,23 @@ export const setupListenersForClientMeta = async (mastoClient: MastodonClientMet
     getLog().i(botName, 'Setting up listeners for bot');
 
     const mastodonService = getMastodonService();
-    const stream = await mastodonService.getStream(mastoClient);
-    stream.on('notification', onNotificationHandler(botName, mastoClient.type));
-    stream.on('conversation', onConversationHandler(botName, mastoClient.type));
-    (stream as any).ws.on('error', onErrorHandler(botName, mastoClient.type));
-    (stream as any).ws.on('close', onDisconnectHandler(botName, mastoClient.type));
+    let stream: WsEvents | undefined;
+
+    try {
+        stream = await mastodonService.getStream(mastoClient);
+        stream.on('notification', onNotificationHandler(botName, mastoClient.type));
+        stream.on('conversation', onConversationHandler(botName, mastoClient.type));
+        (stream as any).ws.on('error', onErrorHandler(botName, mastoClient.type));
+        (stream as any).ws.on('close', onDisconnectHandler(botName, mastoClient.type));
+    } catch (ex) {
+        getLog().e(botName, 'Listener setup failed');
+        return;
+    }
+
+    if (stream == null) {
+        getLog().e(botName, 'Listener setup failed (stream is null)');
+        return;
+    }
 
     const inMemoryService = getMemory();
 
@@ -32,7 +45,7 @@ export const setupListenersForClientMeta = async (mastoClient: MastodonClientMet
         return {
             ...existing,
             client: mastoClient.client,
-            stream: stream,
+            stream: stream!,
         }
     });
 }
