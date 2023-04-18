@@ -8,7 +8,7 @@ import { getLog } from "../services/internal/logService";
 import { cronusRandom } from './api/cronus';
 import { defaultEndpoint, versionEndpoint } from './api/misc';
 import { qsEndpoint, qsEndpointFromTracker, qsEndpointViewSvg } from './api/quicksilver';
-import { steamDbSvg, steamDbSvgFromTracker } from './api/steamDb';
+import { steamDbPng, steamDbSvg, steamDbSvgFromTracker } from './api/steamDb';
 
 interface IHttpServerProps {
     authToken: string;
@@ -27,6 +27,7 @@ export const setUpCustomHttpServer = (props: IHttpServerProps) => {
     router.post('/qs-view', qsEndpointViewSvg(props.authToken));
     router.post('/cronus-random', cronusRandom(props.authToken));
     router.post('/steamdb', steamDbSvg(props.authToken));
+    router.post('/steamdb-png', steamDbPng(props.authToken));
     router.post('/steamdb-anmstracker', steamDbSvgFromTracker(props.authToken));
     router.get('/version', versionEndpoint(props.authToken));
 

@@ -1,9 +1,8 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 
-import { SteamBranch } from '../../contracts/generated/steamBranch';
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
-import { getTempFile, writePngFromSvg } from '../../helper/fileHelper';
+import { writePngFromSvg } from '../../helper/fileHelper';
 import { getAssistantAppsApi } from '../../services/api/assistantAppsApiService';
 import { IMastodonService } from '../../services/external/mastodon/mastodonService.interface';
 import { getLog } from "../../services/internal/logService";
@@ -12,29 +11,14 @@ import { steamDBSvgTemplate } from './steamDb.svg.template';
 export const steamDBToot = async (props: {
     clientMeta: MastodonClientMeta,
     mastodonService: IMastodonService,
-    branches: Array<SteamBranch>,
+    compiledTemplate: string,
     tootParams: MastodonMakeToot
 }) => {
-
-    let compiledTemplate: string | undefined;
-    try {
-        compiledTemplate = await steamDBSvgTemplate({
-            branches: props.branches,
-        });
-    }
-    catch (ex) {
-        getLog().e(props.clientMeta.name, 'error getting steamDb', ex);
-    }
-
-    if (compiledTemplate == null) {
-        getLog().e(props.clientMeta.name, 'error steamDb', 'compiledTemplate == null');
-        return;
-    }
 
     try {
         writePngFromSvg(
             'steamdb-',
-            compiledTemplate,
+            props.compiledTemplate,
             (outputFilePath: string) => {
                 const fileStream = readFileSync(outputFilePath);
                 props.mastodonService.sendTootWithMedia(props.clientMeta, fileStream, props.tootParams);
@@ -58,9 +42,6 @@ export const steamDBFetchAndCompileTemplate = async (): Promise<string> => {
     const compiledTemplate = await steamDBSvgTemplate({
         branches: branchesResult.value,
     });
-
-    const outputFilePathsvg = getTempFile('steamDb', 'svg');
-    writeFileSync(outputFilePathsvg, compiledTemplate);
 
     return compiledTemplate;
 }
