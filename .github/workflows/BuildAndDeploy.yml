@@ -3,6 +3,16 @@
 
 name: Build and Deploy
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
 on:
   push:
     branches: ['main']
@@ -12,6 +22,9 @@ jobs:
   build:
     environment: github-pages
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     strategy:
       matrix:
@@ -24,6 +37,21 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+
+      - name: Write env file
+        env:
+          VITE_MASTODON_API_URL: ${{ secrets.VITE_MASTODON_API_URL }}
+          VITE_MASTODON_TIMEOUT_MS: ${{ secrets.VITE_MASTODON_TIMEOUT_MS }}
+          VITE_ANMS_API_URL: ${{ secrets.VITE_ANMS_API_URL }}
+          VITE_AA_API_URL: ${{ secrets.VITE_AA_API_URL }}
+          VITE_ENCRYPTION_KEY: ${{ secrets.VITE_ENCRYPTION_KEY }}
+        run: |
+          touch .env
+          echo VITE_MASTODON_API_URL="$VITE_MASTODON_API_URL" >> .env
+          echo VITE_MASTODON_TIMEOUT_MS="$VITE_MASTODON_TIMEOUT_MS" >> .env
+          echo VITE_ANMS_API_URL="$VITE_ANMS_API_URL" >> .env
+          echo VITE_AA_API_URL="$VITE_AA_API_URL" >> .env
+          echo VITE_ENCRYPTION_KEY="$VITE_ENCRYPTION_KEY" >> .env
 
       - name: Build TS
         run: |
