@@ -15,9 +15,16 @@ export const NotAuthedPage: Component<IProps> = (props: IProps) => {
     const [credsString, setCredsString] = createSignal('');
 
     const setCredentials = () => {
+        let decrypted = '';
         try {
             const secretKey = getConfig().getEncryptionKey();
-            const decrypted = decrypt(secretKey, credsString());
+            decrypted = decrypt(secretKey, credsString());
+        } catch (err) {
+            getLog().e('Could not decrypt, going to assume that you pasted JSON');
+            decrypted = credsString();
+        }
+
+        try {
             const jsonObj = JSON.parse(decrypted);
             props.setCredentials(jsonObj);
         } catch (err) {
