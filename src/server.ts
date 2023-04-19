@@ -38,15 +38,16 @@ const main = async () => {
             client: actualClient,
             stream: null,
         });
-        getLog().i(`\t${cred.name} client ✔`);
+        getLog().i(`\t${cred.name} ✔`);
     }
     inMemoryService.setMastodonClients(mastoClients);
 
+    getLog().i('Setting up bot listeners');
     for (const mastoClient of mastoClients) {
-        setupListenersForClientMeta(mastoClient);
+        await setupListenersForClientMeta(mastoClient);
     }
 
-    getLog().i("Setup complete...");
+    getLog().i("Bot setups complete...\n");
 
     setUpCustomHttpServer({
         authToken: credentialObj.apiAuthToken,

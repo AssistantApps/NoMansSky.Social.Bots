@@ -1,13 +1,12 @@
 const rss = require('rss-converter');
-import { readFileSync } from 'fs';
 import fetch from "node-fetch";
 
 import { IYoutubePostCredentialItem } from "../contracts/credential";
+import { MastodonMakeToot } from '../contracts/mastodonMakeToot';
 import { IYoutubeVideoFeed } from "../contracts/youtubeVideoFeed";
 import { DatabaseService, getDatabaseService } from "../services/external/database/databaseService";
 import { getMastodonService } from "../services/external/mastodon/mastodonService";
 import { getLog } from "../services/internal/logService";
-import { MastodonMakeToot } from '../contracts/mastodonMakeToot';
 
 const pollInterval = 300000; // 1 per 5 minutes
 const baseYtFeedUrl = 'https://www.youtube.com/feeds/videos.xml?channel_id=';
@@ -26,7 +25,7 @@ export const setUpYoutubePolling = async (youtubeChannelsToToot: Array<IYoutubeP
         }
     }, pollInterval);
 
-    getLog().i('YT polling setup complete.');
+    getLog().i('YT polling setup complete.\n');
 }
 
 const handleYtChannelWatch = async (dbServ: DatabaseService, youtubeChannel: IYoutubePostCredentialItem) => {

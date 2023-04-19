@@ -37,5 +37,5 @@ export const setUpCustomHttpServer = (props: IHttpServerProps) => {
 
     const port = getConfig().getApiPort();
     app.listen(port);
-    getLog().i(`HTTP setup complete. Available at http://localhost:${port}`);
+    getLog().i(`HTTP setup complete. Available at http://localhost:${port}\n`);
 }

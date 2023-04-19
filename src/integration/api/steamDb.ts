@@ -60,20 +60,19 @@ export const steamDbSvgFromTracker = (authToken: string) => async (ctx: Koa.Defa
 
     const inMemoryService = getMemory();
     const mastoService = getMastodonService();
-    const qsMeta = inMemoryService.getMastodonClient(BotType.assistantnmstracker);
-    if (qsMeta == null) {
+    const nadaMeta = inMemoryService.getMastodonClient(BotType.nada);
+    if (nadaMeta == null) {
         getLog().e('Could not find mastoClient');
         return;
     }
 
-    let messageToSend = 'Movement detected on the No Man\'s Sky Steam Branches!';
+    let messageToSend = 'Traveler-Entity, I have detected a disturbance in... another reality?';
     messageToSend += `\nhttps://steamdb.info/app/275850/depots/ \n\n#NoMansSky `;
 
     const tootParams: MastodonMakeToot = {
         status: messageToSend,
         visibility: 'public',
     }
-
 
     let compiledTemplate: string | undefined;
     try {
@@ -82,16 +81,16 @@ export const steamDbSvgFromTracker = (authToken: string) => async (ctx: Koa.Defa
         });
     }
     catch (ex) {
-        getLog().e(qsMeta.name, 'error getting steamDb', ex);
+        getLog().e(nadaMeta.name, 'error getting steamDb', ex);
     }
 
     if (compiledTemplate == null) {
-        getLog().e(qsMeta.name, 'error steamDb', 'compiledTemplate == null');
+        getLog().e(nadaMeta.name, 'error steamDb', 'compiledTemplate == null');
         return;
     }
 
     await steamDBToot({
-        clientMeta: qsMeta,
+        clientMeta: nadaMeta,
         mastodonService: mastoService,
         compiledTemplate: compiledTemplate,
         tootParams,

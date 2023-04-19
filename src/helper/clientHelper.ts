@@ -8,7 +8,6 @@ import { getLog } from "../services/internal/logService";
 
 export const setupListenersForClientMeta = async (mastoClient: MastodonClientMeta) => {
     const botName = mastoClient.name;
-    getLog().i(botName, 'Setting up listeners for bot');
 
     const mastodonService = getMastodonService();
     let stream: WsEvents | undefined;
@@ -20,14 +19,16 @@ export const setupListenersForClientMeta = async (mastoClient: MastodonClientMet
         (stream as any).ws.on('error', onErrorHandler(botName, mastoClient.type));
         (stream as any).ws.on('close', onDisconnectHandler(botName, mastoClient.type));
     } catch (ex) {
-        getLog().e(botName, 'Listener setup failed');
+        getLog().e(`\t${botName} Listener setup failed`);
         return;
     }
 
     if (stream == null) {
-        getLog().e(botName, 'Listener setup failed (stream is null)');
+        getLog().e(`\t${botName} Listener setup failed (stream is null)`);
         return;
     }
+
+    getLog().i(`\t${botName} ✔`);
 
     const inMemoryService = getMemory();
 

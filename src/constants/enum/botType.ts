@@ -5,6 +5,7 @@ export enum BotType {
     theRealAriadne = 'theRealAriadne',
     qsCompanion = 'qsCompanion',
     nada = 'nada',
+    dev = 'dev',
     assistantnmstracker = 'assistantnmstracker',
 }
 
@@ -15,6 +16,8 @@ export const dontSetupListenersBotTypes = () => [
     BotType.unknown,
     BotType.admin,
     BotType.assistantnmstracker,
+    BotType.nada,
+    BotType.dev,
 ].map(bt => bt.toString());
 
 export const botsThatUseRandomDialog = () => [
