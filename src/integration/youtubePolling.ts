@@ -49,7 +49,7 @@ const handleYtChannelWatch = async (dbServ: DatabaseService, youtubeChannel: IYo
 
     const dbTask = dbServ.addYoutubeVideoForChannelId(youtubeChannel.channelId, latestVid.id, latestVid.published);
 
-    console.log(`New vid from ${latestVid.author.name}! ${latestVid.media_group.media_content_url}`);
+    getLog().i(`New vid from ${latestVid.author.name}! ${latestVid.media_group.media_content_url}`);
     const mastoService = getMastodonService();
     const actualClient = await mastoService.createClient(youtubeChannel as any);
     const clientMeta = {
