@@ -16,7 +16,6 @@ export const dontSetupListenersBotTypes = () => [
     BotType.unknown,
     BotType.admin,
     BotType.assistantnmstracker,
-    BotType.nada,
     BotType.dev,
 ].map(bt => bt.toString());
 
