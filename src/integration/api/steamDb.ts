@@ -99,6 +99,7 @@ export const steamDbSvgFromTracker = (authToken: string) => async (ctx: Koa.Defa
     const buffer = getBufferFromSvg(compiledTemplate);
 
     ctx.body = buffer;
+    ctx.set('Content-Type', 'image/png');
 
     await next();
 }

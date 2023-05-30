@@ -98,7 +98,7 @@ const generateRows = (branches: Array<SteamBranch>) => {
   const sortedBranches = branches.sort((a, b) =>
     new Date(b.lastUpdate).getTime() -
     new Date(a.lastUpdate).getTime()
-  );
+  ).slice(0, 3);
   for (let rowIndex = 0; rowIndex < sortedBranches.length; rowIndex++) {
     const branch = sortedBranches[rowIndex];
     rows += generateRow(branch, rowIndex);
