@@ -14,7 +14,8 @@ export const timeAgo = (date: Date): string => {
     dayjs.extend(relativeTime);
 
     try {
-        return (dayjs(date) as any).from(new Date());
+        const currentDateInUTC = (new Date()).getUTCDate();
+        return (dayjs(date) as any).from(currentDateInUTC);
     }
     catch {
         return '';
