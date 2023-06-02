@@ -31,12 +31,13 @@ export const communityMissionSvgTemplate = (props: IProps) => {
   <!--  -->
 
   <!-- START item details -->
-  <image x="1" y="50%" width="170" height="170" href="{imageUrl}" />
-  <text x="27%" y="69%" width="65%" font-size="30" text-anchor="start" fill="white" {fontFamily}>{itemName}</text>
-  <text x="34%" y="80%" width="65%" font-size="25" text-anchor="start" fill="white" {fontFamily}>{qsCost}</text>
-  <image x="27%" y="73%" width="42" height="42" href="{quicksilver.png}" />
+  <image x="1" y="52%" width="170" height="170" href="{imageUrl}" />
+  <text x="27%" y="71%" width="65%" font-size="30" text-anchor="start" fill="white" {fontFamily}>{itemName}</text>
+  <text x="34%" y="82%" width="65%" font-size="25" text-anchor="start" fill="white" {fontFamily}>{qsCost}</text>
+  <image x="27%" y="75%" width="42" height="42" href="{quicksilver.png}" />
   <!-- END item details -->
 
+  <text x="1.5%" y="96%" font-size="10" text-anchor="end" fill="white" {fontFamily}>nomanssky.social</text>
   <text x="98.5%" y="96%" font-size="10" text-anchor="end" fill="white" {fontFamily}>{dateCreated}</text>
 </svg>`;
 

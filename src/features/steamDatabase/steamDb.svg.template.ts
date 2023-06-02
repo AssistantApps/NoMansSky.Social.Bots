@@ -1,5 +1,5 @@
 import { SteamBranch } from "../../contracts/generated/steamBranch";
-import { timeAgo } from "../../helper/dateHelper";
+import { convertDateToUTC, formatDate, timeAgo } from "../../helper/dateHelper";
 
 
 interface IProps {
@@ -78,14 +78,21 @@ export const steamDBSvgTemplate = async (props: IProps) => {
   
   <!-- row end -->
   
-    
-            <text
+      <text
+        x="25"
+        y="345"
+        font-size="10"
+        fill="white"
+      >nomanssky.social</text>
+
+      <text
         x="675"
         y="345"
         font-size="10"
         text-anchor="end"
         fill="white"
-      >nomanssky.social</text>
+      >${formatDate(convertDateToUTC(new Date()), 'YYYY-MM-DD HH:mm') + ' UTC'}</text>
+      
         </g>
     </svg>  
   `;
@@ -108,6 +115,10 @@ const generateRows = (branches: Array<SteamBranch>) => {
 
 const generateRow = (branch: SteamBranch, index: number) => {
   const baseRowY = 100 + (index * 75);
+  let timeText = timeAgo(branch.lastUpdate);
+  if (timeText == 'a few seconds ago') {
+    timeText = 'Just now!';
+  }
   return `
     <line
     x1="25"
@@ -120,6 +131,6 @@ const generateRow = (branch: SteamBranch, index: number) => {
   
         <text x="45" y="${baseRowY + 50}" font-size="30" fill="#00aff4">${branch.name}</text>
         <text x="270" y="${baseRowY + 50}" font-size="30" fill="#00aff4">${branch.buildId}</text>
-        <text x="470" y="${baseRowY + 50}" font-size="30" fill="white">${timeAgo(branch.lastUpdate)}</text>
+        <text x="470" y="${baseRowY + 50}" font-size="30" fill="white">${timeText}</text>
     `;
 }
