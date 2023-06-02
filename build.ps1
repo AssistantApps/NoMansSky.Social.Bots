@@ -1,5 +1,8 @@
-$version = '0.51'
+$json = Get-Content './package.json' | Out-String | ConvertFrom-Json
 
+$version = $json."version"
+
+# Write-Output $version
 
 docker build --no-cache -t nms-social-npc-bots -f Dockerfile --build-arg BUILD_VERSION=$version .
 
