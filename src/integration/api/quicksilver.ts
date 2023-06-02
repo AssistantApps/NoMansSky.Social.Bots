@@ -8,6 +8,7 @@ import { getAssistantNmsApi } from '../../services/api/assistantNmsApiService';
 import { getMastodonService } from '../../services/external/mastodon/mastodonService';
 import { getMemory } from '../../services/internal/inMemoryService';
 import { getLog } from "../../services/internal/logService";
+import { getBufferFromSvg } from '../../helper/fileHelper';
 
 export const qsEndpoint = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
     getLog().i('qsEndpoint');
@@ -87,32 +88,61 @@ export const qsEndpointViewSvg = (authToken: string) => async (ctx: Koa.DefaultC
         return;
     }
 
+    const compiledTemplate = await qsEndpointViewBuffer();
+
+    ctx.body = compiledTemplate;
+    ctx.set('Content-Type', 'image/svg+xml');
+
+    await next();
+}
+
+export const qsEndpointViewPng = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
+    getLog().i('qsEndpointViewPng');
+    const currentAuthHeader = ctx.get('Authorization') ?? '';
+    if (currentAuthHeader.localeCompare(authToken) != 0) {
+        ctx.body = '<h1>Unauthorized</h1>';
+        await next();
+        return;
+    }
+
+    const compiledTemplate = await qsEndpointViewBuffer();
+    if (compiledTemplate == null) {
+        ctx.body = '<h1>Compiled template is null</h1>';
+        await next();
+        return;
+    }
+
+    ctx.body = getBufferFromSvg(compiledTemplate);
+    ctx.set('Content-Type', 'image/png');
+
+    await next();
+}
+
+export const qsEndpointViewBuffer = async () => {
+
     const assistantNmsApi = getAssistantNmsApi();
     const cmResult = await assistantNmsApi.getCommunityMission();
     if (cmResult.isSuccess == false) {
-        getLog().e('qsEndpointViewSvg', 'Could not fetch Community Mission', cmResult.errorMessage);
+        getLog().e('qsEndpointViewBuffer', 'Could not fetch Community Mission', cmResult.errorMessage);
     }
 
     const itemData = await quickSilverCompanionGetItemFromCm({
-        botName: 'qsEndpointViewSvg',
+        botName: 'qsEndpointViewBuffer',
         communityMissionData: cmResult.value,
     });
 
     if (itemData == null) {
-        getLog().e('qsEndpointViewSvg', 'Item not found by id');
+        getLog().e('qsEndpointViewBuffer', 'Item not found by id');
         return;
     }
 
     const compiledTemplate = await quickSilverCompanionCompiledTemplate({
-        botName: 'qsEndpointViewSvg',
+        botName: 'qsEndpointViewBuffer',
         itemName: itemData.Name,
         itemIcon: itemData.Icon,
         itemBaseValueUnits: itemData.BaseValueUnits,
         communityMissionData: cmResult.value,
     });
 
-    ctx.body = compiledTemplate;
-    ctx.set('Content-Type', 'image/svg+xml');
-
-    await next();
+    return compiledTemplate;
 }

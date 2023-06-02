@@ -14,10 +14,15 @@ export const timeAgo = (date: Date): string => {
     dayjs.extend(relativeTime);
 
     try {
-        const currentDateInUTC = (new Date()).getUTCDate();
+        const currentDateInUTC = convertDateToUTC(new Date());
         return (dayjs(date) as any).from(currentDateInUTC);
     }
     catch {
         return '';
     }
+}
+
+export const convertDateToUTC = (date: Date): Date => {
+    const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    return utc;
 }

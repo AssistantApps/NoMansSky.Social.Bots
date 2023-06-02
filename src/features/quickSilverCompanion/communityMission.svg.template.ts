@@ -1,5 +1,5 @@
 import { CommunityMissionViewModel } from "../../contracts/generated/communityMissionViewModel";
-import { formatDate } from "../../helper/dateHelper";
+import { convertDateToUTC, formatDate } from "../../helper/dateHelper";
 import { communityMissionImageData } from "./communityMission.png";
 import { quicksilverImageData } from "./quicksilver.png";
 
@@ -51,7 +51,7 @@ export const communityMissionSvgTemplate = (props: IProps) => {
     .replace('{itemName}', props.itemName)
     .replace('{qsCost}', props.qsCost.toString())
     .replaceAll(' {fontFamily}', '')//'font-family="Arial, Helvetica, sans-serif"')
-    .replace('{dateCreated}', formatDate(new Date(), 'YYYY-MM-DD HH:mm'));
+    .replace('{dateCreated}', formatDate(convertDateToUTC(new Date()), 'YYYY-MM-DD HH:mm') + ' UTC');
 
   return compiledTemplate;
 }
