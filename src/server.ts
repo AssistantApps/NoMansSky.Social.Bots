@@ -3,7 +3,7 @@ import { Container } from "typedi";
 
 import devCreds from './assets/data/credentials.dev.json';
 import prodCreds from './assets/data/credentials.json';
-import { dontSetupListenersBotTypes } from './constants/enum/botType';
+import { dontSetupClientsBotTypes, dontSetupListenersBotTypes } from './constants/enum/botType';
 import { ICredential } from './contracts/credential';
 import { MastodonClientMeta } from './contracts/mastoClientMeta';
 import { setupListenersForClientMeta } from './helper/clientHelper';
@@ -29,7 +29,7 @@ const main = async () => {
 
     const mastoClients: Array<MastodonClientMeta> = [];
     for (const cred of credentialObj.accounts) {
-        if (dontSetupListenersBotTypes().includes(cred.type)) continue;
+        if (dontSetupClientsBotTypes().includes(cred.type)) continue;
 
         const credAsAny: any = (cred as any);
         const actualClient = await mastoService.createClient(credAsAny);
@@ -44,6 +44,7 @@ const main = async () => {
 
     getLog().i('Setting up bot listeners');
     for (const mastoClient of mastoClients) {
+        if (dontSetupListenersBotTypes().includes(mastoClient.type)) continue;
         await setupListenersForClientMeta(mastoClient);
     }
 

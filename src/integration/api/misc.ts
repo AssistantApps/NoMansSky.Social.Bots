@@ -3,6 +3,7 @@ import Koa from 'koa';
 import { version } from '../../../package.json';
 import adminVersion from '../../assets/data/admin-version.json';
 import { getConfig } from '../../services/internal/configService';
+import { isRequestAuthed } from './guard/hasAuth';
 
 
 export const defaultEndpoint = async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
@@ -12,8 +13,7 @@ export const defaultEndpoint = async (ctx: Koa.DefaultContext, next: () => Promi
 }
 
 export const versionEndpoint = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
-    const currentAuthHeader = ctx.get('Authorization') ?? '';
-    const isAdmin = currentAuthHeader.localeCompare(authToken) == 0;
+    const isAdmin = await isRequestAuthed(authToken, ctx, next);
 
     let output = `DOCKER_BUILD_VERSION: ${getConfig().buildVersion() ?? '???'}\n`;
     output += `packageVersion: ${version ?? '???'}\n`;

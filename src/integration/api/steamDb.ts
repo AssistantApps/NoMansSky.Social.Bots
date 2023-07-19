@@ -9,15 +9,12 @@ import { getMemory } from '../../services/internal/inMemoryService';
 import { getLog } from "../../services/internal/logService";
 import { getBufferFromSvg } from '../../helper/fileHelper';
 import { steamDBSvgTemplate } from '../../features/steamDatabase/steamDb.svg.template';
+import { isRequestAuthed } from './guard/hasAuth';
 
 export const steamDbSvg = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
     getLog().i('steamDbSvg');
-    const currentAuthHeader = ctx.get('Authorization') ?? '';
-    if (currentAuthHeader.localeCompare(authToken) != 0) {
-        ctx.body = '<h1>Unauthorized</h1>';
-        await next();
-        return;
-    }
+    const isAuthed = await isRequestAuthed(authToken, ctx, next);
+    if (isAuthed == false) return;
 
     const template = await steamDBFetchAndCompileTemplate();
 
@@ -29,12 +26,8 @@ export const steamDbSvg = (authToken: string) => async (ctx: Koa.DefaultContext,
 
 export const steamDbPng = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
     getLog().i('steamDbPng');
-    const currentAuthHeader = ctx.get('Authorization') ?? '';
-    if (currentAuthHeader.localeCompare(authToken) != 0) {
-        ctx.body = '<h1>Unauthorized</h1>';
-        await next();
-        return;
-    }
+    const isAuthed = await isRequestAuthed(authToken, ctx, next);
+    if (isAuthed == false) return;
 
     const compiledTemplate = await steamDBFetchAndCompileTemplate();
 
@@ -48,12 +41,8 @@ export const steamDbPng = (authToken: string) => async (ctx: Koa.DefaultContext,
 
 export const steamDbSvgFromTracker = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
     getLog().i('steamDbSvgFromTracker');
-    const currentAuthHeader = ctx.get('Authorization') ?? '';
-    if (currentAuthHeader.localeCompare(authToken) != 0) {
-        ctx.body = '<h1>Unauthorized</h1>';
-        await next();
-        return;
-    }
+    const isAuthed = await isRequestAuthed(authToken, ctx, next);
+    if (isAuthed == false) return;
 
     const bodyParams: any = ctx.request.body;
     const mappedBodyParams: Array<SteamBranch> = bodyParams;

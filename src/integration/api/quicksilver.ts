@@ -9,15 +9,12 @@ import { getMastodonService } from '../../services/external/mastodon/mastodonSer
 import { getMemory } from '../../services/internal/inMemoryService';
 import { getLog } from "../../services/internal/logService";
 import { getBufferFromSvg } from '../../helper/fileHelper';
+import { isRequestAuthed } from './guard/hasAuth';
 
 export const qsEndpoint = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
     getLog().i('qsEndpoint');
-    const currentAuthHeader = ctx.get('Authorization') ?? '';
-    if (currentAuthHeader.localeCompare(authToken) != 0) {
-        ctx.body = '<h1>Unauthorized</h1>';
-        await next();
-        return;
-    }
+    const isAuthed = await isRequestAuthed(authToken, ctx, next);
+    if (isAuthed == false) return;
 
     const inMemoryService = getMemory();
     const mastoService = getMastodonService();
@@ -36,12 +33,8 @@ export const qsEndpoint = (authToken: string) => async (ctx: Koa.DefaultContext,
 
 export const qsEndpointFromTracker = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
     getLog().i('qsEndpointFromTracker');
-    const currentAuthHeader = ctx.get('Authorization') ?? '';
-    if (currentAuthHeader.localeCompare(authToken) != 0) {
-        ctx.body = '<h1>Unauthorized</h1>';
-        await next();
-        return;
-    }
+    const isAuthed = await isRequestAuthed(authToken, ctx, next);
+    if (isAuthed == false) return;
 
     const bodyParams: any = ctx.request.body;
     const mappedBodyParams: CommunityMissionViewModel = {
@@ -81,12 +74,8 @@ export const qsEndpointFromTracker = (authToken: string) => async (ctx: Koa.Defa
 
 export const qsEndpointViewSvg = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
     getLog().i('qsEndpointViewSvg');
-    const currentAuthHeader = ctx.get('Authorization') ?? '';
-    if (currentAuthHeader.localeCompare(authToken) != 0) {
-        ctx.body = '<h1>Unauthorized</h1>';
-        await next();
-        return;
-    }
+    const isAuthed = await isRequestAuthed(authToken, ctx, next);
+    if (isAuthed == false) return;
 
     const compiledTemplate = await qsEndpointViewBuffer();
 
@@ -98,12 +87,8 @@ export const qsEndpointViewSvg = (authToken: string) => async (ctx: Koa.DefaultC
 
 export const qsEndpointViewPng = (authToken: string) => async (ctx: Koa.DefaultContext, next: () => Promise<any>) => {
     getLog().i('qsEndpointViewPng');
-    const currentAuthHeader = ctx.get('Authorization') ?? '';
-    if (currentAuthHeader.localeCompare(authToken) != 0) {
-        ctx.body = '<h1>Unauthorized</h1>';
-        await next();
-        return;
-    }
+    const isAuthed = await isRequestAuthed(authToken, ctx, next);
+    if (isAuthed == false) return;
 
     const compiledTemplate = await qsEndpointViewBuffer();
     if (compiledTemplate == null) {

@@ -1,119 +1,40 @@
 import { GameItemService, } from 'assistantapps-nomanssky-info';
-import { createReadStream, writeFileSync } from 'fs';
+import { createReadStream, readFileSync, writeFileSync } from 'fs';
 
 import { MastodonClientMeta } from "../../contracts/mastoClientMeta";
 import { MastodonMakeToot } from "../../contracts/mastodonMakeToot";
 import { MastodonMessageEventData } from "../../contracts/mastodonMessageEvent";
-import { getBase64FromAssistantNmsImage, getBufferFromSvg, getTempFile } from '../../helper/fileHelper';
+import { getBase64FromAssistantNmsImage, getBufferFromSvg, getTempFile, writePngFromSvg } from '../../helper/fileHelper';
 import { randomIntFromRange } from '../../helper/randomHelper';
 import { getAssistantNmsApi } from "../../services/api/assistantNmsApiService";
 import { getDatabaseService } from '../../services/external/database/databaseService';
 import { IMastodonService } from '../../services/external/mastodon/mastodonService.interface';
 import { getLog } from "../../services/internal/logService";
 import { cronusRandomReviewAvailableBackgrounds, cronusRandomReviewSvgTemplate } from './cronusRandomReview.svg.template';
+import { cronusRandomDialog } from './cronusRandomDialog';
 
-export const cronusRandomReviewMentionHandler = async (
+export const cronusRandomReviewToot = async (props: {
     clientMeta: MastodonClientMeta,
-    payload: MastodonMessageEventData,
-    mastodonService: IMastodonService
-) => {
-    const databaseService = getDatabaseService();
+    mastodonService: IMastodonService,
+    compiledTemplate: string,
+    tootParams: MastodonMakeToot
+}) => {
 
-    // const scheduledDate = new Date();
-    // scheduledDate.setMinutes(scheduledDate.getMinutes() + 2);
+    try {
+        writePngFromSvg(
+            'cronus-random-',
+            props.compiledTemplate,
+            (outputFilePath: string) => {
+                const fileStream = readFileSync(outputFilePath);
+                props.mastodonService.sendTootWithMedia(props.clientMeta, fileStream, props.tootParams);
+                getLog().i(props.clientMeta.name, 'cronus random response', props.tootParams);
 
-    // const assistantNmsApi = getAssistantNmsApi();
-    // const cmResult = await assistantNmsApi.getCommunityMission();
-    // if (cmResult.isSuccess == false) {
-    //     getLog().e(clientMeta.name, 'Could not fetch Community Mission', cmResult.errorMessage);
-    //     // TODO maybe send a message to user
-    // }
-
-    // const dataService = new DataService();
-    // const qsStoreItems = await dataService.getQuicksilverStore();
-
-    // let compiledTemplate: string | null = null;
-    // let messageToSend = `Greetings traveller`;
-    // if (username != null) {
-    //     messageToSend += ` @${username}. `;
-    // } else {
-    //     messageToSend += `! `;
-    // }
-    // messageToSend = `\nThe Space Anomaly is accumulating research data from Travellers across multiple realities. `;
-
-    // try {
-    //     const current = qsStoreItems.find((qs: QuicksilverStore) => qs.MissionId == cmResult.value.missionId);
-    //     const itemId = current?.Items?.[(cmResult.value.currentTier - 1)]?.ItemId;
-    //     if (itemId == null) throw 'Item not found by tier';
-
-    //     const gameItemService = new GameItemService();
-    //     const itemData = await gameItemService.getItemDetails(itemId);
-    //     if (itemData == null) throw 'Item not found by id';
-
-    //     const shareLink = `https://app.nmsassistant.com/link/en/${itemData.Id}.html`;
-    //     messageToSend = messageToSend + `\n\nCurrent item being researched: ${itemData.Name}.\n${shareLink}`;
-
-    //     const imgDestData = await getBase64FromAssistantNmsImage(itemData.Icon);
-
-    //     compiledTemplate = communityMissionSvgTemplate({
-    //         ...cmResult.value,
-    //         itemName: itemData.Name,
-    //         qsCost: itemData.BaseValueUnits,
-    //         itemImgData: imgDestData,
-    //     });
-    // }
-    // catch (ex) {
-    //     getLog().e(clientMeta.name, 'error getting community mission details', ex);
-    // }
-
-    // if (compiledTemplate == null) {
-    //     getLog().e(clientMeta.name, 'error getting community mission details', 'compiledTemplate == null');
-    //     return;
-    // }
-
-    // const params: MastodonMakeToot = {
-    //     status: messageToSend,
-    //     in_reply_to_id: replyToId,
-    //     visibility: visibility,
-    //     scheduled_at: scheduledDate.toISOString(),
-    // }
-    // const mediaIdCache = getTempFile('qsCompanion-', 'json');
-    // try {
-    //     const mediaIdCacheContent: any = readFileSync(mediaIdCache);
-    //     const mediaIdCacheArr = JSON.parse(mediaIdCacheContent);
-    //     if (Array.isArray(mediaIdCacheArr)) {
-    //         sendToot(clientMeta, {
-    //             ...params,
-    //             media_ids: mediaIdCacheArr,
-    //         });
-    //         return;
-    //     }
-    // }
-    // catch (_) {
-    // }
-
-    // try {
-    //     getBufferFromSvg(
-    //         'qsCompanion-',
-    //         compiledTemplate,
-    //         (outputFilePath: string) => {
-    //             const fileStream = createReadStream(outputFilePath);
-    //             mastodonService.uploadTootMedia(clientMeta, fileStream).then((mediaId) => {
-    //                 // const mediaIdCacheContent = JSON.stringify([mediaId]);
-    //                 // writeFileSync(mediaIdCache, mediaIdCacheContent);
-
-    //                 mastodonService.sendToot(clientMeta, {
-    //                     ...params,
-    //                     media_ids: [mediaId],
-    //                 });
-    //                 getLog().i(clientMeta.name, 'quicksilver companion response', params);
-    //             });
-    //         }
-    //     );
-    // }
-    // catch (ex) {
-    //     getLog().e(clientMeta.name, 'error generating community mission image', ex);
-    // }
+            }
+        );
+    }
+    catch (ex) {
+        getLog().e(props.clientMeta.name, 'error generating steamDb image', ex);
+    }
 }
 
 
@@ -127,14 +48,19 @@ export const cronusRandomReviewCompileTemplate = async (): Promise<string> => {
 
     const cookingValue = selectedCookingItem.CookingValue;
     const cookingPerc: string = ((cookingValue + 1) * cookingValue * 47).toFixed(0);
+    const starValue: number = (cookingValue * 5);
+
+    const randomDialogOptions: Array<string> = cronusRandomDialog[starValue.toFixed(0)];
+    const randomDialogOptionIndex = randomIntFromRange(0, randomDialogOptions.length);
+    const selectedRandomDialogOption = randomDialogOptions[randomDialogOptionIndex];
 
     const compiledTemplate = await cronusRandomReviewSvgTemplate({
         selectedBackground: cronusRandomReviewAvailableBackgrounds[selectedBackgroundIndex],
-        reviewDialog: 'this is a test image',
+        reviewDialog: selectedRandomDialogOption,
         iconPath: selectedCookingItem.Icon,
         itemName: selectedCookingItem.Name,
         naniteValue: cookingPerc,
-        starValue: cookingValue * 5,
+        starValue: starValue,
     });
 
     const outputFilePathsvg = getTempFile('cronus', 'svg');

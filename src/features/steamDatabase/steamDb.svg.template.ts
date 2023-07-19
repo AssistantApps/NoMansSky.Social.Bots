@@ -116,9 +116,16 @@ const generateRows = (branches: Array<SteamBranch>) => {
 const generateRow = (branch: SteamBranch, index: number) => {
   const baseRowY = 100 + (index * 75);
   let timeText = timeAgo(branch.lastUpdate);
+
+  const textLengthLimit = 14;
   if (timeText == 'a few seconds ago') {
     timeText = 'Just now!';
+  } else if (timeText == 'a few minutes ago') {
+    timeText = 'a few mins ago';
+  } else if (timeText.length > textLengthLimit) {
+    timeText = timeText.slice(0, (textLengthLimit - 3)) + '...';
   }
+
   return `
     <line
     x1="25"
