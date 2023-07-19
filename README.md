@@ -26,6 +26,8 @@ Consists of
   - Ariadne
   - TheRealAriadne
   - QuicksilverCompanion
+  - Nada
+  - And more (hopefully soon!)
 - NodeJS API (using KoaJS)
 - Admin UI
 
