@@ -1,6 +1,6 @@
 {
   "name": "nomanssky.social.bots",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "",
   "author": "Kurt Lourens",
   "homepage": "https://github.com/AssistantApps/NoMansSky.Social.Bots#readme",
@@ -38,7 +38,7 @@
     "@tauri-apps/api": "^1.2.0",
     "@types/koa": "^2.13.5",
     "@xata.io/client": "^0.22.1",
-    "assistantapps-nomanssky-info": "^4.23.4830",
+    "assistantapps-nomanssky-info": "^4.30.4847",
     "axios": "^1.3.2",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.7",
