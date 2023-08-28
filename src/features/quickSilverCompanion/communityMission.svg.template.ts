@@ -37,7 +37,7 @@ export const communityMissionSvgTemplate = (props: IProps) => {
   <image x="27%" y="75%" width="42" height="42" href="{quicksilver.png}" />
   <!-- END item details -->
 
-  <text x="1.5%" y="96%" font-size="10" text-anchor="end" fill="white" {fontFamily}>nomanssky.social</text>
+  <text x="1.5%" y="96%" font-size="10" text-anchor="start" fill="white" {fontFamily}>nomanssky.social</text>
   <text x="98.5%" y="96%" font-size="10" text-anchor="end" fill="white" {fontFamily}>{dateCreated}</text>
 </svg>`;
 
